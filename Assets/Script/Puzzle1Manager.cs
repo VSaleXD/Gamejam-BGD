@@ -15,7 +15,7 @@ public class Puzzle1Manager : MonoBehaviour
 
     private void Awake()
     {
-        gameManager = FindFirstObjectByType<game>();
+        gameManager = game.Instance != null ? game.Instance : FindFirstObjectByType<game>();
 
         if (requiredItems == null || requiredItems.Length == 0)
         {

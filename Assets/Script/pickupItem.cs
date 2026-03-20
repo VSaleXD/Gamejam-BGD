@@ -10,7 +10,7 @@ public class pickupItem : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        puzzle1Manager = FindFirstObjectByType<Puzzle1Manager>();
+        puzzle1Manager = game.Instance != null ? game.Instance.Puzzle1 : FindFirstObjectByType<Puzzle1Manager>();
     }
 
     public void Interact(GameObject interactor)

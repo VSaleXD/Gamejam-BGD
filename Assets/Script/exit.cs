@@ -10,10 +10,12 @@ public class exit : MonoBehaviour, IInteractable
     [SerializeField] private string requiredItemId = "AccessCard";
 
     private Puzzle1Manager puzzle1Manager;
+    private game gameManager;
 
     private void Awake()
     {
-        puzzle1Manager = FindFirstObjectByType<Puzzle1Manager>();
+        gameManager = game.Instance != null ? game.Instance : FindFirstObjectByType<game>();
+        puzzle1Manager = gameManager != null ? gameManager.Puzzle1 : FindFirstObjectByType<Puzzle1Manager>();
     }
 
     public void Interact(GameObject interactor)
@@ -39,7 +41,6 @@ public class exit : MonoBehaviour, IInteractable
 
         Debug.Log("Exit terbuka. Player berhasil keluar ruangan.");
 
-        game gameManager = FindFirstObjectByType<game>();
         if (gameManager != null)
         {
             gameManager.WinRun();
