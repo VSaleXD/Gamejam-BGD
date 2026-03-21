@@ -1253,6 +1253,8 @@ MonoBehaviour:
   autoFindTilesFromChildren: 1
   tilesRoot: {fileID: 1353883900}
   tiles: []
+  useTileShrinkManager: 1
+  tileShrinkManager: {fileID: 1415411472}
   useRandomSeed: 1
   fixedSeed: 12345
 --- !u!114 &527442548
@@ -2118,6 +2120,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTileCheck
   tilemap: {fileID: 1415411474}
   brokenTile: {fileID: 11400000, guid: a7e86a322cb6b744e9e8a73e5ad285f5, type: 2}
+  useFallTag: 1
+  fallTag: FALL
+  fallLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &764483333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3134,6 +3141,9 @@ MonoBehaviour:
   crackDelay: 1
   breakDelay: 0.4
   startDelay: 2
+  delayMultiplierPerRound: 0.93
+  minDelayMultiplier: 0.35
+  runOnStart: 0
 --- !u!483693784 &1415411473
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -11522,11 +11532,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1260221679953474825, guid: 6c7bf3f17a71226409cdad523e41643a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: -2.05
       objectReference: {fileID: 0}
     - target: {fileID: 1260221679953474825, guid: 6c7bf3f17a71226409cdad523e41643a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: -5.07
       objectReference: {fileID: 0}
     - target: {fileID: 1260221679953474825, guid: 6c7bf3f17a71226409cdad523e41643a, type: 3}
       propertyPath: m_LocalPosition.z
