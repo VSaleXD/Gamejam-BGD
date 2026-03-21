@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PowerSocket : MonoBehaviour, IInteractable
 {
@@ -10,6 +11,8 @@ public class PowerSocket : MonoBehaviour, IInteractable
         Green,
         Yellow
     }
+
+    [SerializeField] private UnityEvent onSocketPowered;
 
     [Header("Color Mode")]
     [SerializeField] private bool useRandomColor = true;
@@ -73,7 +76,13 @@ public class PowerSocket : MonoBehaviour, IInteractable
     public void PowerOn()
     {
         if (isPowered) return;
+
         isPowered = true;
+
+        Debug.Log(name + " SOCKET AKTIF");
+
+        // ⭐⭐⭐ DI SINI SOCKET TRIGGER SESUATU
+        onSocketPowered?.Invoke();
     }
 
     public void ResetPower()

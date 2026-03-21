@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.Events;   // ⭐ TAMBAHAN
 
 public class Puzzle2Manager : MonoBehaviour, IPuzzleRound
 {
     [Header("Puzzle 2 Setup")]
     [SerializeField] private PowerSocket[] sockets;
+
+    [Header("GLOBAL ACTIVATION (isi di inspector)")]
+    [SerializeField] private UnityEvent onPuzzleCompleted;   // ⭐ TAMBAHAN
 
     public bool IsCompleted { get; private set; }
 
@@ -26,7 +30,18 @@ public class Puzzle2Manager : MonoBehaviour, IPuzzleRound
         if (AreAllSocketsPowered())
         {
             IsCompleted = true;
+
             Debug.Log("Puzzle 2 selesai. Semua socket sudah aktif.");
+
+            // ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+            // ⭐ DI SINI GLOBAL EVENT DIPANGGIL
+            // ⭐ Contoh:
+            // ⭐ - buka lift
+            // ⭐ - lanjut ke room berikutnya
+            // ⭐ - nyalakan generator utama
+            // ⭐ - trigger cutscene
+            // ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+            onPuzzleCompleted?.Invoke();
         }
     }
 
@@ -39,14 +54,14 @@ public class Puzzle2Manager : MonoBehaviour, IPuzzleRound
     {
         IsCompleted = false;
 
-        // reset socket
+        // ⭐ reset socket
         for (int i = 0; i < sockets.Length; i++)
         {
             if (sockets[i] != null)
                 sockets[i].ResetPower();
         }
 
-        // destroy semua kabel di dunia
+        // ⭐ destroy semua kabel
         CableInstance[] cables = FindObjectsByType<CableInstance>(
             FindObjectsSortMode.None
         );
