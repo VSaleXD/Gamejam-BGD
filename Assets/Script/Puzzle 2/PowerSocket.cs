@@ -4,6 +4,7 @@ public class PowerSocket : MonoBehaviour, IInteractable
 {
     public enum SocketColor
     {
+        Default,
         Red,
         Blue,
         Green,
@@ -17,7 +18,7 @@ public class PowerSocket : MonoBehaviour, IInteractable
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRender;
-
+    [SerializeField] private Sprite spriteDefault;
     [SerializeField] private Sprite spriteRed;
     [SerializeField] private Sprite spriteBlue;
     [SerializeField] private Sprite spriteGreen;
@@ -47,15 +48,22 @@ public class PowerSocket : MonoBehaviour, IInteractable
 
         switch (color)
         {
+            case SocketColor.Default:
+                spriteRender.sprite = spriteDefault;
+                break;
+
             case SocketColor.Red:
                 spriteRender.sprite = spriteRed;
                 break;
+
             case SocketColor.Blue:
                 spriteRender.sprite = spriteBlue;
                 break;
+
             case SocketColor.Green:
                 spriteRender.sprite = spriteGreen;
                 break;
+
             case SocketColor.Yellow:
                 spriteRender.sprite = spriteYellow;
                 break;
@@ -79,6 +87,9 @@ public class PowerSocket : MonoBehaviour, IInteractable
 
         switch (currentColor)
         {
+            case SocketColor.Default:
+                return c == Color.gray;
+
             case SocketColor.Red:
                 return c == Color.red;
 
