@@ -13,6 +13,7 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
     private int orderedProgress;
 
     public bool IsCompleted { get; private set; }
+    public int RequiredItemCount => requiredItems != null ? requiredItems.Length : 0;
 
     private void Awake()
     {
@@ -149,5 +150,21 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
     private string NormalizeItemId(string itemId)
     {
         return string.IsNullOrWhiteSpace(itemId) ? string.Empty : itemId.Trim().ToLowerInvariant();
+    }
+
+    public string[] GetRequiredItemsSnapshot()
+    {
+        if (requiredItems == null)
+        {
+            return System.Array.Empty<string>();
+        }
+
+        string[] copy = new string[requiredItems.Length];
+        for (int i = 0; i < requiredItems.Length; i++)
+        {
+            copy[i] = requiredItems[i];
+        }
+
+        return copy;
     }
 }

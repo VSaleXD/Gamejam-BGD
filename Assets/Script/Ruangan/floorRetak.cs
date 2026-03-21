@@ -103,6 +103,11 @@ public class floorRetak : MonoBehaviour
         SetState(TileState.Safe);
     }
 
+    public void ForceSetBroken()
+    {
+        SetState(TileState.Broken);
+    }
+
     public void SetCrackDelayScale(float scale)
     {
         crackDelayScale = Mathf.Max(0.1f, scale);
