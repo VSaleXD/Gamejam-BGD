@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class PowerSource : MonoBehaviour, IInteractable
 {
+    [Header("Cable Mode")]
+    [SerializeField] private bool useColorCycle = true;
+
+    [SerializeField] private Color fixedColor = Color.yellow;
+
     private int colorIndex = 0;
 
     private Color[] colors =
@@ -11,25 +16,27 @@ public class PowerSource : MonoBehaviour, IInteractable
         Color.green,
         Color.yellow
     };
-    
+
     public void Interact(GameObject interactor)
     {
-        // ⭐ kalau puzzle selesai → tidak boleh ambil kabel
+        // kalau puzzle selesai → tidak boleh ambil kabel
         if (Puzzle2Manager.Instance != null &&
             Puzzle2Manager.Instance.IsCompleted)
-        {
-            Debug.Log("Puzzle sudah selesai. Tidak bisa ambil kabel.");
             return;
-        }
 
         PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
 
-        if (pc != null)
+        if (pc == null) return;
+
+        if (useColorCycle)
         {
             pc.BeginCable(transform, colors[colorIndex]);
+            CycleColor();
         }
-
-        CycleColor();
+        else
+        {
+            pc.BeginCable(transform, fixedColor);
+        }
     }
 
     void CycleColor()
