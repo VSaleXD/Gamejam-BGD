@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7216599160276289850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1237810275994361901}
+  - component: {fileID: 1701166019784635883}
+  - component: {fileID: 2649648899139830943}
+  - component: {fileID: 7918904204238400528}
+  - component: {fileID: 7547216230204137560}
+  - component: {fileID: 7858379443291732330}
+  m_Layer: 0
+  m_Name: gameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1237810275994361901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1701166019784635883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5193ee00440c7e4cb99b17546096246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::game
+  scenePuzzleController: {fileID: 2649648899139830943}
+  runRandomizer: {fileID: 7918904204238400528}
+  floorPressureManager: {fileID: 7547216230204137560}
+  endlessMode: 1
+  endlessSceneNames:
+  - puzzle1
+  - puzzle2
+  allowRestartWithR: 1
+--- !u!114 &2649648899139830943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77741803df5122841ae5b77d590a642e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle1Manager
+  mustFollowOrder: 0
+  requiredItems:
+  - mug
+  - stapler
+  - book
+  itemObjectsToReset:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &7918904204238400528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5d19532fd1f7c4fae48eb3aa02b3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunRandomizer
+  randomizeOnStart: 1
+  uniqueSpawnPoints: 1
+  itemTargets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  itemSpawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  randomizeSubmit: 0
+  submitTarget: {fileID: 0}
+  submitSpawnPoints: []
+--- !u!114 &7547216230204137560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4822505e268cfd4a830a2260a73aece, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloorPressureManager
+  runOnStart: 1
+  initialDelay: 2
+  waveInterval: 2
+  cracksPerWave: 1
+  waveIntervalMultiplierPerRound: 0.92
+  minWaveInterval: 0.4
+  crackDelayMultiplierPerRound: 0.93
+  minCrackDelayMultiplier: 0.4
+  pressureMode: 1
+  edgeBandWidth: 0.08
+  centerPoint: {fileID: 0}
+  autoFindTilesFromChildren: 1
+  tilesRoot: {fileID: 0}
+  tiles: []
+  useRandomSeed: 1
+  fixedSeed: 12345
+--- !u!114 &7858379443291732330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6dd1d743b5c324f85392f7bfd21b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle2Manager
+  sockets: []
+  cables: []

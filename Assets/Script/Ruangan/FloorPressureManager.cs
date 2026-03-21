@@ -31,6 +31,10 @@ public class FloorPressureManager : MonoBehaviour
     [SerializeField] private Transform tilesRoot;
     [SerializeField] private floorRetak[] tiles;
 
+    [Header("Tilemap Mode")]
+    [SerializeField] private bool useTileShrinkManager;
+    [SerializeField] private TileShrinkManager tileShrinkManager;
+
     [Header("Random")]
     [SerializeField] private bool useRandomSeed = true;
     [SerializeField] private int fixedSeed = 12345;
@@ -52,10 +56,19 @@ public class FloorPressureManager : MonoBehaviour
     private void Start()
     {
         SetupRandomSeed();
-        RefreshTiles();
+
+        if (!useTileShrinkManager)
+        {
+            RefreshTiles();
+        }
 
         timer = initialDelay;
-        started = runOnStart;
+        started = runOnStart && !useTileShrinkManager;
+
+        if (useTileShrinkManager && runOnStart && tileShrinkManager != null)
+        {
+            tileShrinkManager.PrepareForRound(1);
+        }
     }
 
     private void Update()
@@ -77,6 +90,20 @@ public class FloorPressureManager : MonoBehaviour
 
     public void PrepareForRound(int roundNumber)
     {
+        if (useTileShrinkManager)
+        {
+            if (tileShrinkManager != null)
+            {
+                tileShrinkManager.PrepareForRound(roundNumber);
+            }
+            else
+            {
+                Debug.LogWarning("FloorPressureManager: useTileShrinkManager aktif tapi reference TileShrinkManager kosong.");
+            }
+
+            return;
+        }
+
         RefreshTiles();
         ResetAllTilesToSafe();
         ApplyDifficulty(roundNumber);
@@ -86,17 +113,42 @@ public class FloorPressureManager : MonoBehaviour
 
     public void StartPressure()
     {
+        if (useTileShrinkManager)
+        {
+            if (tileShrinkManager != null)
+            {
+                tileShrinkManager.BeginPressure();
+            }
+
+            return;
+        }
+
         started = true;
         timer = initialDelay;
     }
 
     public void StopPressure()
     {
+        if (useTileShrinkManager)
+        {
+            if (tileShrinkManager != null)
+            {
+                tileShrinkManager.StopPressure();
+            }
+
+            return;
+        }
+
         started = false;
     }
 
     public void RefreshTiles()
     {
+        if (useTileShrinkManager)
+        {
+            return;
+        }
+
         if (autoFindTilesFromChildren)
         {
             Transform sourceRoot = tilesRoot != null ? tilesRoot : transform;
@@ -111,6 +163,11 @@ public class FloorPressureManager : MonoBehaviour
 
     public void ResetAllTilesToSafe()
     {
+        if (useTileShrinkManager)
+        {
+            return;
+        }
+
         if (tiles == null)
         {
             return;
@@ -127,6 +184,11 @@ public class FloorPressureManager : MonoBehaviour
 
     public void TriggerPressureWave()
     {
+        if (useTileShrinkManager)
+        {
+            return;
+        }
+
         if (tiles == null || tiles.Length == 0)
         {
             return;
