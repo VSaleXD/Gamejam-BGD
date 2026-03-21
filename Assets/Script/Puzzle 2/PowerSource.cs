@@ -2,18 +2,27 @@ using UnityEngine;
 
 public class PowerSource : MonoBehaviour, IInteractable
 {
+    public enum CableColorType
+    {
+        Default,
+        Red,
+        Blue,
+        Green,
+        Yellow
+    }
+
     [Header("Cable Mode")]
     [SerializeField] private bool useColorCycle = true;
-    [SerializeField] private Color fixedColor = Color.yellow;
+    [SerializeField] private CableColorType fixedColor = CableColorType.Yellow;
 
     private int colorIndex = 0;
 
-    private Color[] colors =
+    private CableColorType[] colors =
     {
-        Color.red,
-        Color.blue,
-        Color.green,
-        Color.yellow
+        CableColorType.Red,
+        CableColorType.Blue,
+        CableColorType.Green,
+        CableColorType.Yellow
     };
 
     private bool fixedCableAlreadyUsed = false;
@@ -33,12 +42,12 @@ public class PowerSource : MonoBehaviour, IInteractable
 
         if (useColorCycle)
         {
-            pc.BeginCable(transform, colors[colorIndex]);
+            pc.BeginCable(transform, ConvertColor(colors[colorIndex]));
             CycleColor();
         }
         else
         {
-            pc.BeginCable(transform, fixedColor);
+            pc.BeginCable(transform, ConvertColor(fixedColor));
         }
     }
 
@@ -47,6 +56,18 @@ public class PowerSource : MonoBehaviour, IInteractable
         colorIndex++;
         if (colorIndex >= colors.Length)
             colorIndex = 0;
+    }
+
+    Color ConvertColor(CableColorType t)
+    {
+        switch (t)
+        {
+            case CableColorType.Red: return Color.red;
+            case CableColorType.Blue: return Color.blue;
+            case CableColorType.Green: return Color.green;
+            case CableColorType.Yellow: return Color.yellow;
+            default: return Color.gray; // ⭐ default
+        }
     }
 
     // ⭐ dipanggil saat kabel berhasil dipasang

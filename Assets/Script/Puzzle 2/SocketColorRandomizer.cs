@@ -7,6 +7,15 @@ public class SocketColorRandomizer : MonoBehaviour
     {
         PowerSocket[] sockets = FindObjectsByType<PowerSocket>(FindObjectsSortMode.None);
 
+        List<PowerSocket> randomSockets = new List<PowerSocket>();
+
+        foreach (var s in sockets)
+        {
+            // ⭐ hanya yang random mode
+            if (s.UseRandomColor())
+                randomSockets.Add(s);
+        }
+
         List<PowerSocket.SocketColor> colors = new List<PowerSocket.SocketColor>()
         {
             PowerSocket.SocketColor.Red,
@@ -17,9 +26,9 @@ public class SocketColorRandomizer : MonoBehaviour
 
         Shuffle(colors);
 
-        for (int i = 0; i < sockets.Length; i++)
+        for (int i = 0; i < randomSockets.Count; i++)
         {
-            sockets[i].SetColor(colors[i]);
+            randomSockets[i].SetColor(colors[i]);
         }
     }
 

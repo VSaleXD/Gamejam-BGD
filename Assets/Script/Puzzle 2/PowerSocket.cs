@@ -10,6 +10,11 @@ public class PowerSocket : MonoBehaviour, IInteractable
         Yellow
     }
 
+    [Header("Color Mode")]
+    [SerializeField] private bool useRandomColor = true;
+
+    [SerializeField] private SocketColor fixedColor = SocketColor.Red;
+
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRender;
 
@@ -17,6 +22,7 @@ public class PowerSocket : MonoBehaviour, IInteractable
     [SerializeField] private Sprite spriteBlue;
     [SerializeField] private Sprite spriteGreen;
     [SerializeField] private Sprite spriteYellow;
+
 
     public SocketColor currentColor;
 
@@ -87,5 +93,19 @@ public class PowerSocket : MonoBehaviour, IInteractable
         }
 
         return false;
+    }
+
+    private void Awake()
+    {
+        // ⭐ kalau tidak random → set warna langsung
+        if (!useRandomColor)
+        {
+            SetColor(fixedColor);
+        }
+    }
+
+    public bool UseRandomColor()
+    {
+        return useRandomColor;
     }
 }
