@@ -1,26 +1,55 @@
 using UnityEngine;
 
-public class PowerSocket : MonoBehaviour, IInteractable
+public class PowerSocket : MonoBehaviour
 {
+    public enum SocketColor
+    {
+        Red,
+        Blue,
+        Green,
+        Yellow
+    }
+
+    [Header("Visual")]
+    [SerializeField] private SpriteRenderer spriteRender;
+
+    [SerializeField] private Sprite spriteRed;
+    [SerializeField] private Sprite spriteBlue;
+    [SerializeField] private Sprite spriteGreen;
+    [SerializeField] private Sprite spriteYellow;
+
+    public SocketColor currentColor;
+
     public bool isPowered = false;
 
-    public void Interact(GameObject interactor)
+    public void SetColor(SocketColor color)
     {
-        if (isPowered) return;
+        currentColor = color;
 
-        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
-        if (pc != null)
+        if (spriteRender == null)
+            spriteRender = GetComponent<SpriteRenderer>();
+
+        switch (color)
         {
-            pc.AttachToSocket(this);
+            case SocketColor.Red:
+                spriteRender.sprite = spriteRed;
+                break;
+            case SocketColor.Blue:
+                spriteRender.sprite = spriteBlue;
+                break;
+            case SocketColor.Green:
+                spriteRender.sprite = spriteGreen;
+                break;
+            case SocketColor.Yellow:
+                spriteRender.sprite = spriteYellow;
+                break;
         }
     }
 
     public void PowerOn()
     {
         if (isPowered) return;
-
         isPowered = true;
-        Debug.Log("Socket ON");
     }
 
     public void ResetPower()
