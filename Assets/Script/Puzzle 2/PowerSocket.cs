@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PowerSocket : MonoBehaviour
+public class PowerSocket : MonoBehaviour, IInteractable
 {
     public enum SocketColor
     {
@@ -21,6 +21,16 @@ public class PowerSocket : MonoBehaviour
     public SocketColor currentColor;
 
     public bool isPowered = false;
+
+    public void Interact(GameObject interactor)
+    {
+        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
+
+        if (pc != null)
+        {
+            pc.TryAttach(this);
+        }
+    }
 
     public void SetColor(SocketColor color)
     {
