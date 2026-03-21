@@ -1,17 +1,15 @@
 using UnityEngine;
 
-public class PowerSource : MonoBehaviour
+public class PowerSource : MonoBehaviour, IInteractable
 {
     public Color cableColor = Color.yellow;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void Interact(GameObject interactor)
     {
-        
+        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
+        if (pc != null)
+        {
+            pc.BeginCable(transform, cableColor);
+        }
     }
 }

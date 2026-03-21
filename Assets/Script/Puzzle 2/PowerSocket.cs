@@ -1,8 +1,19 @@
 using UnityEngine;
 
-public class PowerSocket : MonoBehaviour
+public class PowerSocket : MonoBehaviour, IInteractable
 {
     public bool isPowered = false;
+
+    public void Interact(GameObject interactor)
+    {
+        if (isPowered) return;
+
+        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
+        if (pc != null)
+        {
+            pc.AttachToSocket(this);
+        }
+    }
 
     public void PowerOn()
     {
@@ -10,11 +21,6 @@ public class PowerSocket : MonoBehaviour
 
         isPowered = true;
         Debug.Log("Socket ON");
-
-        // nanti bisa:
-        // buka pintu
-        // nyalakan lampu
-        // aktifkan mesin
     }
 
     public void ResetPower()

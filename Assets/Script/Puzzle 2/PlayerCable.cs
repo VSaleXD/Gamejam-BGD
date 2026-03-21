@@ -36,26 +36,25 @@ public class PlayerCable : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D col)
+    public void BeginCable(Transform source, Color color)
     {
-        if (kabelSudahTerpasang) return;
+        if (membawaKabel) return;
 
-        PowerSource ps = col.GetComponent<PowerSource>();
-        if (ps != null)
-        {
-            cableStart = ps.transform;
-            membawaKabel = true;
+        cableStart = source;
+        membawaKabel = true;
 
-            cableLine.startColor = ps.cableColor;
-            cableLine.endColor = ps.cableColor;
-        }
+        cableLine.startColor = color;
+        cableLine.endColor = color;
+    }
 
-        PowerSocket socket = col.GetComponent<PowerSocket>();
-        if (socket != null && membawaKabel)
-        {
-            kabelSudahTerpasang = true;
-            cableEndSocket = socket.transform;
-        }
+    public void AttachToSocket(PowerSocket socket)
+    {
+        if (!membawaKabel || kabelSudahTerpasang) return;
+
+        kabelSudahTerpasang = true;
+        cableEndSocket = socket.transform;
+
+        socket.PowerOn();
     }
 
     public void ResetCable()
