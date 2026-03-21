@@ -23,6 +23,8 @@ public class floorRetak : MonoBehaviour
     private float stateTimer;
     private Collider2D tileCollider;
     private game gameManager;
+    private float baseCrackToBrokenDelay;
+    private float crackDelayScale = 1f;
 
     public bool IsSafe => currentState == TileState.Safe;
     public bool IsCracked => currentState == TileState.Cracked;
@@ -32,6 +34,7 @@ public class floorRetak : MonoBehaviour
     {
         tileCollider = GetComponent<Collider2D>();
         gameManager = game.Instance != null ? game.Instance : FindFirstObjectByType<game>();
+        baseCrackToBrokenDelay = crackToBrokenDelay;
         SetState(TileState.Safe);
     }
 
@@ -98,6 +101,12 @@ public class floorRetak : MonoBehaviour
     public void ForceResetToSafe()
     {
         SetState(TileState.Safe);
+    }
+
+    public void SetCrackDelayScale(float scale)
+    {
+        crackDelayScale = Mathf.Max(0.1f, scale);
+        crackToBrokenDelay = baseCrackToBrokenDelay * crackDelayScale;
     }
 
     private void SetState(TileState nextState)

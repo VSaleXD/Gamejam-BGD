@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b379059710f654549ae84d8929242db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::exit
-  requiresPuzzle1Complete: 1
+  requiresCurrentPuzzleComplete: 1
   requiresItem: 0
   requiredItemId: AccessCard
 --- !u!61 &305418727
@@ -1141,6 +1141,7 @@ GameObject:
   - component: {fileID: 527442546}
   - component: {fileID: 527442545}
   - component: {fileID: 527442547}
+  - component: {fileID: 527442548}
   m_Layer: 0
   m_Name: gameManager
   m_TagString: Untagged
@@ -1160,11 +1161,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5193ee00440c7e4cb99b17546096246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::game
-  puzzle1Manager: {fileID: 527442546}
+  scenePuzzleController: {fileID: 527442548}
   runRandomizer: {fileID: 527442545}
   floorPressureManager: {fileID: 527442547}
+  endlessMode: 1
+  endlessSceneNames: []
   allowRestartWithR: 1
-  restartOnlyAfterGameEnds: 0
 --- !u!4 &527442544
 Transform:
   m_ObjectHideFlags: 0
@@ -1224,6 +1226,7 @@ MonoBehaviour:
   - mug
   - stapler
   - book
+  itemObjectsToReset: []
 --- !u!114 &527442547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1240,6 +1243,10 @@ MonoBehaviour:
   initialDelay: 2
   waveInterval: 2
   cracksPerWave: 1
+  waveIntervalMultiplierPerRound: 0.92
+  minWaveInterval: 0.4
+  crackDelayMultiplierPerRound: 0.93
+  minCrackDelayMultiplier: 0.4
   pressureMode: 1
   edgeBandWidth: 0.08
   centerPoint: {fileID: 0}
@@ -1248,6 +1255,20 @@ MonoBehaviour:
   tiles: []
   useRandomSeed: 1
   fixedSeed: 12345
+--- !u!114 &527442548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527442542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6dd1d743b5c324f85392f7bfd21b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle2Manager
+  sockets: []
+  cables: []
 --- !u!1 &580210013
 GameObject:
   m_ObjectHideFlags: 0
@@ -1897,9 +1918,9 @@ GameObject:
   - component: {fileID: 764483329}
   - component: {fileID: 764483328}
   - component: {fileID: 764483331}
-  - component: {fileID: 764483332}
   - component: {fileID: 764483334}
   - component: {fileID: 764483333}
+  - component: {fileID: 764483335}
   m_Layer: 6
   m_Name: player
   m_TagString: Untagged
@@ -1978,8 +1999,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1731075637
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -8542198928005550946, guid: 987e83f50ad2c9f439425aa161068823, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2097,20 +2118,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTileCheck
   tilemap: {fileID: 1415411474}
   brokenTile: {fileID: 11400000, guid: a7e86a322cb6b744e9e8a73e5ad285f5, type: 2}
---- !u!114 &764483332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 764483323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649513331275df48b7aff3a0ebb390c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMoveRotate
-  moveSpeed: 5
-  rotateSpeed: 720
 --- !u!114 &764483333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2234,6 +2241,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &764483335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764483323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b447d730d643ad4081fbd2deaff9772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::playerController
+  moveSpeed: 5
+  rotateSpeed: 720
 --- !u!4 &778017625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1260221679953474825, guid: 6c7bf3f17a71226409cdad523e41643a, type: 3}

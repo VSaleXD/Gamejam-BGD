@@ -10,6 +10,14 @@ public class PlayerCable : MonoBehaviour
     private bool membawaKabel = false;
     private bool kabelSudahTerpasang = false;
 
+    private void Awake()
+    {
+        if (cableLine != null)
+        {
+            cableLine.positionCount = 0;
+        }
+    }
+
     void Update()
     {
         if (!membawaKabel) return;
@@ -47,6 +55,19 @@ public class PlayerCable : MonoBehaviour
         {
             kabelSudahTerpasang = true;
             cableEndSocket = socket.transform;
+        }
+    }
+
+    public void ResetCable()
+    {
+        membawaKabel = false;
+        kabelSudahTerpasang = false;
+        cableStart = null;
+        cableEndSocket = null;
+
+        if (cableLine != null)
+        {
+            cableLine.positionCount = 0;
         }
     }
 }

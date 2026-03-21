@@ -15,6 +15,12 @@ public class FloorPressureManager : MonoBehaviour
     [SerializeField] private float waveInterval = 2f;
     [SerializeField] private int cracksPerWave = 1;
 
+    [Header("Difficulty Scaling")]
+    [SerializeField] private float waveIntervalMultiplierPerRound = 0.92f;
+    [SerializeField] private float minWaveInterval = 0.4f;
+    [SerializeField] private float crackDelayMultiplierPerRound = 0.93f;
+    [SerializeField] private float minCrackDelayMultiplier = 0.4f;
+
     [Header("Pressure Pattern")]
     [SerializeField] private PressureMode pressureMode = PressureMode.EdgeToCenter;
     [SerializeField, Range(0f, 0.5f)] private float edgeBandWidth = 0.08f;
@@ -31,6 +37,17 @@ public class FloorPressureManager : MonoBehaviour
 
     private float timer;
     private bool started;
+    private float baseWaveInterval;
+    private float currentCrackDelayScale = 1f;
+
+    public float CurrentWaveInterval => GetCurrentWaveInterval();
+    public float CurrentCrackDelayScale => currentCrackDelayScale;
+    public float BaseWaveInterval => Mathf.Max(0.0001f, baseWaveInterval);
+
+    private void Awake()
+    {
+        baseWaveInterval = Mathf.Max(0.0001f, waveInterval);
+    }
 
     private void Start()
     {
@@ -55,7 +72,16 @@ public class FloorPressureManager : MonoBehaviour
         }
 
         TriggerPressureWave();
-        timer = waveInterval;
+        timer = GetCurrentWaveInterval();
+    }
+
+    public void PrepareForRound(int roundNumber)
+    {
+        RefreshTiles();
+        ResetAllTilesToSafe();
+        ApplyDifficulty(roundNumber);
+        timer = initialDelay;
+        started = runOnStart;
     }
 
     public void StartPressure()
@@ -80,6 +106,22 @@ public class FloorPressureManager : MonoBehaviour
         if (tiles == null || tiles.Length == 0)
         {
             Debug.LogWarning("FloorPressureManager: tile floorRetak belum ditemukan.");
+        }
+    }
+
+    public void ResetAllTilesToSafe()
+    {
+        if (tiles == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if (tiles[i] != null)
+            {
+                tiles[i].ForceResetToSafe();
+            }
         }
     }
 
@@ -248,5 +290,41 @@ public class FloorPressureManager : MonoBehaviour
         }
 
         Random.InitState(fixedSeed);
+    }
+
+    private void ApplyDifficulty(int roundNumber)
+    {
+        int safeRound = Mathf.Max(1, roundNumber);
+
+        float waveScale = Mathf.Pow(waveIntervalMultiplierPerRound, safeRound - 1);
+        float crackScale = Mathf.Pow(crackDelayMultiplierPerRound, safeRound - 1);
+
+        float currentInterval = Mathf.Max(minWaveInterval, baseWaveInterval * waveScale);
+        waveInterval = currentInterval;
+
+        float currentCrackScale = Mathf.Max(minCrackDelayMultiplier, crackScale);
+        currentCrackDelayScale = currentCrackScale;
+        ApplyCrackDelayScaleToTiles(currentCrackScale);
+    }
+
+    private void ApplyCrackDelayScaleToTiles(float scale)
+    {
+        if (tiles == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if (tiles[i] != null)
+            {
+                tiles[i].SetCrackDelayScale(scale);
+            }
+        }
+    }
+
+    private float GetCurrentWaveInterval()
+    {
+        return Mathf.Max(minWaveInterval, waveInterval);
     }
 }

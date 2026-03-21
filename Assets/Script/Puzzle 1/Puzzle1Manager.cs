@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Puzzle1Manager : MonoBehaviour
+public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
 {
     [Header("Puzzle 1 Setup")]
     [SerializeField] private bool mustFollowOrder = false;
     [SerializeField] private string[] requiredItems = { "mug", "stapler", "book" };
+    [SerializeField] private GameObject[] itemObjectsToReset;
 
     private game gameManager;
     private readonly HashSet<string> submittedItems = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
@@ -20,6 +21,31 @@ public class Puzzle1Manager : MonoBehaviour
         if (requiredItems == null || requiredItems.Length == 0)
         {
             Debug.LogWarning("Puzzle1Manager belum punya daftar item required.");
+        }
+    }
+
+    public void BeginPuzzleRound()
+    {
+        ResetPuzzleRound();
+    }
+
+    public void ResetPuzzleRound()
+    {
+        IsCompleted = false;
+        orderedProgress = 0;
+        submittedItems.Clear();
+
+        if (itemObjectsToReset == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < itemObjectsToReset.Length; i++)
+        {
+            if (itemObjectsToReset[i] != null)
+            {
+                itemObjectsToReset[i].SetActive(true);
+            }
         }
     }
 

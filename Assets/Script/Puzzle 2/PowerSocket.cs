@@ -16,4 +16,9 @@ public class PowerSocket : MonoBehaviour
         // nyalakan lampu
         // aktifkan mesin
     }
+
+    public void ResetPower()
+    {
+        isPowered = false;
+    }
 }

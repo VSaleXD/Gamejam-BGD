@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMoveandRotate : MonoBehaviour
+public class playerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float rotateSpeed = 720f; // derajat per detik (biar smooth)
+    [SerializeField] private float rotateSpeed = 720f; 
 
     private Rigidbody2D rb;
-    private PlayerInput input;
     private Vector2 moveInput;
+    private PlayerInput input;
 
     private void Awake()
     {
@@ -31,16 +31,25 @@ public class PlayerMoveandRotate : MonoBehaviour
     {
         moveInput = input.Contoller.Movement.ReadValue<Vector2>();
         moveInput = moveInput.normalized;
-
         RotateTowardsMovement();
+    }
+
+    public bool IsActionPressedThisFrame()
+    {
+        return input != null && input.Contoller.Action.WasPressedThisFrame();
     }
 
     private void FixedUpdate()
     {
+        if (rb == null)
+        {
+            return;
+        }
+
         rb.linearVelocity = moveInput * moveSpeed;
     }
 
-    private void RotateTowardsMovement()
+     private void RotateTowardsMovement()
     {
         if (moveInput.sqrMagnitude < 0.01f)
             return;
