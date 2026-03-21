@@ -4,7 +4,6 @@ public class PowerSource : MonoBehaviour, IInteractable
 {
     [Header("Cable Mode")]
     [SerializeField] private bool useColorCycle = true;
-
     [SerializeField] private Color fixedColor = Color.yellow;
 
     private int colorIndex = 0;
@@ -17,15 +16,19 @@ public class PowerSource : MonoBehaviour, IInteractable
         Color.yellow
     };
 
+    private bool fixedCableAlreadyUsed = false;
+
     public void Interact(GameObject interactor)
     {
-        // kalau puzzle selesai → tidak boleh ambil kabel
         if (Puzzle2Manager.Instance != null &&
             Puzzle2Manager.Instance.IsCompleted)
             return;
 
-        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
+        // ⭐ kalau mode fixed dan sudah pernah dipakai → stop
+        if (!useColorCycle && fixedCableAlreadyUsed)
+            return;
 
+        PlayerCable pc = interactor.GetComponentInChildren<PlayerCable>();
         if (pc == null) return;
 
         if (useColorCycle)
@@ -42,8 +45,13 @@ public class PowerSource : MonoBehaviour, IInteractable
     void CycleColor()
     {
         colorIndex++;
-
         if (colorIndex >= colors.Length)
             colorIndex = 0;
+    }
+
+    // ⭐ dipanggil saat kabel berhasil dipasang
+    public void NotifyCableUsed()
+    {
+        fixedCableAlreadyUsed = true;
     }
 }

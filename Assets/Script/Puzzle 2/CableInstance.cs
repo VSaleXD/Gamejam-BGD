@@ -10,12 +10,15 @@ public class CableInstance : MonoBehaviour
 
     private LineRenderer lr;
     private bool isAttached = false;
+    private PowerSource source;
 
-    public void Init(Transform source, Transform player, Color color)
+    public void Init(Transform sourceTransform, Transform player, Color color)
     {
-        start = source;
+        start = sourceTransform;
         followTarget = player;
         cableColor = color;
+
+        source = sourceTransform.GetComponent<PowerSource>();
 
         lr = GetComponent<LineRenderer>();
         lr.positionCount = 2;
@@ -41,14 +44,18 @@ public class CableInstance : MonoBehaviour
             lr.SetPosition(1, followTarget.position);
     }
 
-    public void Attach(PowerSocket socket)
+        public void Attach(PowerSocket socket)
     {
+        
         if (isAttached) return;
 
         isAttached = true;
         endSocket = socket.transform;
 
         socket.PowerOn();
+
+        if (source != null)
+            source.NotifyCableUsed();
     }
 
     public bool IsAttached()
