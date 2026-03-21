@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Player
   - interactable
+  - Obstacle
   - Ground
-  - FALL
   - Exit
   - 
   - 
@@ -43,6 +43,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 2635187219
+    locked: 0
+  - name: Obstacle
+    uniqueID: 892648595
     locked: 0
   - name: Item
     uniqueID: 3274297925

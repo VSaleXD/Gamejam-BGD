@@ -46,7 +46,8 @@ public class playerController : MonoBehaviour
             return;
         }
 
-        rb.linearVelocity = moveInput * moveSpeed;
+        Vector2 nextPosition = rb.position + moveInput * moveSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(nextPosition);
     }
 
      private void RotateTowardsMovement()

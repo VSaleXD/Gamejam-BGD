@@ -15,10 +15,14 @@ public class game : MonoBehaviour
     [SerializeField] private MonoBehaviour scenePuzzleController;
 
     [Header("Opsional - Sistem Tambahan")]
+    [Tooltip("Kosongkan jika scene ini tidak pakai room generator runtime.")]
+    [SerializeField] private roomBuilder roomGenerator;
     [Tooltip("Kosongkan jika scene ini tidak pakai random spawn item.")]
     [SerializeField] private RunRandomizer runRandomizer;
     [Tooltip("Kosongkan jika scene ini tidak pakai pressure/retak lantai.")]
     [SerializeField] private FloorPressureManager floorPressureManager;
+    [Tooltip("Kosongkan jika scene ini tidak pakai objective paper Puzzle 1.")]
+    [SerializeField] private Puzzle1ObjectivePaperSpawner puzzle1ObjectivePaperSpawner;
 
     [Header("Endless - Pindah Scene")]
     [Tooltip("Aktifkan untuk mode endless antar scene puzzle.")]
@@ -67,9 +71,19 @@ public class game : MonoBehaviour
             runRandomizer = GetComponent<RunRandomizer>();
         }
 
+        if (roomGenerator == null)
+        {
+            roomGenerator = GetComponent<roomBuilder>();
+        }
+
         if (floorPressureManager == null)
         {
             floorPressureManager = GetComponent<FloorPressureManager>();
+        }
+
+        if (puzzle1ObjectivePaperSpawner == null)
+        {
+            puzzle1ObjectivePaperSpawner = GetComponent<Puzzle1ObjectivePaperSpawner>();
         }
 
         if (cachedScenePuzzle == null)
@@ -198,9 +212,19 @@ public class game : MonoBehaviour
             cachedScenePuzzle.BeginPuzzleRound();
         }
 
+        if (roomGenerator != null)
+        {
+            roomGenerator.PrepareForRound(persistentFloorNumber);
+        }
+
         if (runRandomizer != null)
         {
             runRandomizer.RandomizeRun();
+        }
+
+        if (puzzle1ObjectivePaperSpawner != null)
+        {
+            puzzle1ObjectivePaperSpawner.PrepareForRound(persistentFloorNumber);
         }
 
         if (floorPressureManager != null)

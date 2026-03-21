@@ -47,6 +47,7 @@ public class FloorPressureManager : MonoBehaviour
     public float CurrentWaveInterval => GetCurrentWaveInterval();
     public float CurrentCrackDelayScale => currentCrackDelayScale;
     public float BaseWaveInterval => Mathf.Max(0.0001f, baseWaveInterval);
+    public Transform TilesRoot => tilesRoot;
 
     private void Awake()
     {
@@ -158,6 +159,21 @@ public class FloorPressureManager : MonoBehaviour
         if (tiles == null || tiles.Length == 0)
         {
             Debug.LogWarning("FloorPressureManager: tile floorRetak belum ditemukan.");
+        }
+    }
+
+    public void SetTilesRoot(Transform newTilesRoot, bool refreshNow)
+    {
+        if (useTileShrinkManager)
+        {
+            return;
+        }
+
+        tilesRoot = newTilesRoot;
+
+        if (refreshNow)
+        {
+            RefreshTiles();
         }
     }
 
