@@ -7,8 +7,12 @@ public class Puzzle2Manager : MonoBehaviour, IPuzzleRound
 
     public bool IsCompleted { get; private set; }
 
+    public static Puzzle2Manager Instance;
+
     private void Awake()
     {
+        Instance = this;
+
         if (sockets == null || sockets.Length == 0)
         {
             sockets = GetComponentsInChildren<PowerSocket>(true);

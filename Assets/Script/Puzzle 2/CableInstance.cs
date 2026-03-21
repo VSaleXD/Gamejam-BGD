@@ -6,6 +6,8 @@ public class CableInstance : MonoBehaviour
     private Transform followTarget;
     private Transform endSocket;
 
+    private Color cableColor;
+
     private LineRenderer lr;
     private bool isAttached = false;
 
@@ -13,11 +15,18 @@ public class CableInstance : MonoBehaviour
     {
         start = source;
         followTarget = player;
+        cableColor = color;
 
         lr = GetComponent<LineRenderer>();
         lr.positionCount = 2;
+
         lr.startColor = color;
         lr.endColor = color;
+    }
+
+    public Color GetCableColor()
+    {
+        return cableColor;
     }
 
     void Update()

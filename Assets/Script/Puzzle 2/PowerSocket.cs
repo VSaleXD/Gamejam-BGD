@@ -66,4 +66,26 @@ public class PowerSocket : MonoBehaviour, IInteractable
     {
         isPowered = false;
     }
+
+    public bool CanAccept(CableInstance cable)
+    {
+        Color c = cable.GetCableColor();
+
+        switch (currentColor)
+        {
+            case SocketColor.Red:
+                return c == Color.red;
+
+            case SocketColor.Blue:
+                return c == Color.blue;
+
+            case SocketColor.Green:
+                return c == Color.green;
+
+            case SocketColor.Yellow:
+                return c == Color.yellow;
+        }
+
+        return false;
+    }
 }

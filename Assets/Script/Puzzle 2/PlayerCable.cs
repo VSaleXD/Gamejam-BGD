@@ -27,8 +27,15 @@ public class PlayerCable : MonoBehaviour
 
         if (currentCable.IsAttached()) return;
 
+        // ⭐ cek warna
+        if (!socket.CanAccept(currentCable))
+        {
+            Debug.Log("Warna kabel tidak cocok!");
+            return;
+        }
+
         currentCable.Attach(socket);
 
-        currentCable = null; // sekarang player bebas ambil kabel baru
+        currentCable = null;
     }
 }
