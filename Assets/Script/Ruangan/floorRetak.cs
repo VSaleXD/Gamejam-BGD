@@ -19,12 +19,17 @@ public class floorRetak : MonoBehaviour
     [SerializeField] private bool autoReset = false;
     [SerializeField] private float resetDelay = 3f;
 
+    [Header("Player Touch")]
+    [SerializeField] private bool crackOnPlayerTouch = false;
+    [SerializeField] private float touchCrackGraceDuration = 1.5f;
+
     private TileState currentState = TileState.Safe;
     private float stateTimer;
     private Collider2D tileCollider;
     private game gameManager;
     private float baseCrackToBrokenDelay;
     private float crackDelayScale = 1f;
+    private float touchCrackAllowedAt;
 
     public bool IsSafe => currentState == TileState.Safe;
     public bool IsCracked => currentState == TileState.Cracked;
@@ -35,6 +40,7 @@ public class floorRetak : MonoBehaviour
         tileCollider = GetComponent<Collider2D>();
         gameManager = game.Instance != null ? game.Instance : FindFirstObjectByType<game>();
         baseCrackToBrokenDelay = crackToBrokenDelay;
+        touchCrackAllowedAt = Time.time + Mathf.Max(0f, touchCrackGraceDuration);
         SetState(TileState.Safe);
     }
 
@@ -87,6 +93,16 @@ public class floorRetak : MonoBehaviour
 
         if (currentState == TileState.Safe)
         {
+            if (!crackOnPlayerTouch)
+            {
+                return;
+            }
+
+            if (Time.time < touchCrackAllowedAt)
+            {
+                return;
+            }
+
             TriggerCrack();
             return;
         }
@@ -126,6 +142,7 @@ public class floorRetak : MonoBehaviour
 
     public void ForceResetToSafe()
     {
+        touchCrackAllowedAt = Time.time + Mathf.Max(0f, touchCrackGraceDuration);
         SetState(TileState.Safe);
     }
 

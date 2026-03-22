@@ -1257,8 +1257,6 @@ MonoBehaviour:
   autoFindTilesFromChildren: 1
   tilesRoot: {fileID: 0}
   tiles: []
-  useTileShrinkManager: 1
-  tileShrinkManager: {fileID: 1415411472}
   useRandomSeed: 1
   fixedSeed: 12345
 --- !u!114 &527442548
@@ -2178,7 +2176,6 @@ GameObject:
   - component: {fileID: 1415411471}
   - component: {fileID: 1415411474}
   - component: {fileID: 1415411473}
-  - component: {fileID: 1415411472}
   m_Layer: 0
   m_Name: Tilemap Placeholder
   m_TagString: Untagged
@@ -2201,31 +2198,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 247084927}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1415411472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1415411470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 631a1608e4481c84cb238f3694fbc25e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TileShrinkManager
-  tilemap: {fileID: 1415411474}
-  normalTile: {fileID: 11400000, guid: 38b4d50fffe5f824eb3145c8a5c328be, type: 2}
-  crack1Tile: {fileID: 11400000, guid: 6eb5d492e64af58459ca3f8bff808430, type: 2}
-  crack2Tile: {fileID: 11400000, guid: 999bcd1fc5fb8a14da706b77be171909, type: 2}
-  brokenTile: {fileID: 11400000, guid: a7e86a322cb6b744e9e8a73e5ad285f5, type: 2}
-  width: 36
-  height: 20
-  crackDelay: 1
-  breakDelay: 0.4
-  startDelay: 2
-  delayMultiplierPerRound: 0.93
-  minDelayMultiplier: 0.35
-  runOnStart: 0
 --- !u!483693784 &1415411473
 TilemapRenderer:
   serializedVersion: 2

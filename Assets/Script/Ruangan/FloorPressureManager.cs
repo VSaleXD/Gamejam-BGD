@@ -26,14 +26,15 @@ public class FloorPressureManager : MonoBehaviour
     [SerializeField, Range(0f, 0.5f)] private float edgeBandWidth = 0.08f;
     [SerializeField] private Transform centerPoint;
 
+    [Header("Spawn Safety")]
+    [SerializeField] private bool protectPlayerArea = true;
+    [SerializeField, Min(0f)] private float protectedPlayerRadius = 1.25f;
+    [SerializeField] private Transform playerTransform;
+
     [Header("Tile Source")]
     [SerializeField] private bool autoFindTilesFromChildren = true;
     [SerializeField] private Transform tilesRoot;
     [SerializeField] private floorRetak[] tiles;
-
-    [Header("Tilemap Mode")]
-    [SerializeField] private bool useTileShrinkManager;
-    [SerializeField] private TileShrinkManager tileShrinkManager;
 
     [Header("Random")]
     [SerializeField] private bool useRandomSeed = true;
@@ -58,18 +59,10 @@ public class FloorPressureManager : MonoBehaviour
     {
         SetupRandomSeed();
 
-        if (!useTileShrinkManager)
-        {
-            RefreshTiles();
-        }
+        RefreshTiles();
 
         timer = initialDelay;
-        started = runOnStart && !useTileShrinkManager;
-
-        if (useTileShrinkManager && runOnStart && tileShrinkManager != null)
-        {
-            tileShrinkManager.PrepareForRound(1);
-        }
+        started = runOnStart;
     }
 
     private void Update()
@@ -91,20 +84,6 @@ public class FloorPressureManager : MonoBehaviour
 
     public void PrepareForRound(int roundNumber)
     {
-        if (useTileShrinkManager)
-        {
-            if (tileShrinkManager != null)
-            {
-                tileShrinkManager.PrepareForRound(roundNumber);
-            }
-            else
-            {
-                Debug.LogWarning("FloorPressureManager: useTileShrinkManager aktif tapi reference TileShrinkManager kosong.");
-            }
-
-            return;
-        }
-
         RefreshTiles();
         ResetAllTilesToSafe();
         ApplyDifficulty(roundNumber);
@@ -114,42 +93,17 @@ public class FloorPressureManager : MonoBehaviour
 
     public void StartPressure()
     {
-        if (useTileShrinkManager)
-        {
-            if (tileShrinkManager != null)
-            {
-                tileShrinkManager.BeginPressure();
-            }
-
-            return;
-        }
-
         started = true;
         timer = initialDelay;
     }
 
     public void StopPressure()
     {
-        if (useTileShrinkManager)
-        {
-            if (tileShrinkManager != null)
-            {
-                tileShrinkManager.StopPressure();
-            }
-
-            return;
-        }
-
         started = false;
     }
 
     public void RefreshTiles()
     {
-        if (useTileShrinkManager)
-        {
-            return;
-        }
-
         if (autoFindTilesFromChildren)
         {
             Transform sourceRoot = tilesRoot != null ? tilesRoot : transform;
@@ -164,11 +118,6 @@ public class FloorPressureManager : MonoBehaviour
 
     public void SetTilesRoot(Transform newTilesRoot, bool refreshNow)
     {
-        if (useTileShrinkManager)
-        {
-            return;
-        }
-
         tilesRoot = newTilesRoot;
 
         if (refreshNow)
@@ -179,11 +128,6 @@ public class FloorPressureManager : MonoBehaviour
 
     public void ResetAllTilesToSafe()
     {
-        if (useTileShrinkManager)
-        {
-            return;
-        }
-
         if (tiles == null)
         {
             return;
@@ -200,11 +144,6 @@ public class FloorPressureManager : MonoBehaviour
 
     public void TriggerPressureWave()
     {
-        if (useTileShrinkManager)
-        {
-            return;
-        }
-
         if (tiles == null || tiles.Length == 0)
         {
             return;
@@ -226,6 +165,15 @@ public class FloorPressureManager : MonoBehaviour
             return;
         }
 
+        if (protectPlayerArea)
+        {
+            ExcludeTilesNearPlayer(safeTiles);
+            if (safeTiles.Count == 0)
+            {
+                return;
+            }
+        }
+
         int picks = Mathf.Clamp(cracksPerWave, 1, safeTiles.Count);
 
         if (pressureMode == PressureMode.Random)
@@ -235,6 +183,74 @@ public class FloorPressureManager : MonoBehaviour
         }
 
         CrackFromEdgeToCenter(safeTiles, picks);
+    }
+
+    private void ExcludeTilesNearPlayer(List<floorRetak> safeTiles)
+    {
+        if (safeTiles == null || safeTiles.Count == 0)
+        {
+            return;
+        }
+
+        Transform player = ResolvePlayerTransform();
+        if (player == null)
+        {
+            return;
+        }
+
+        float sqrRadius = protectedPlayerRadius * protectedPlayerRadius;
+        for (int i = safeTiles.Count - 1; i >= 0; i--)
+        {
+            floorRetak tile = safeTiles[i];
+            if (tile == null)
+            {
+                safeTiles.RemoveAt(i);
+                continue;
+            }
+
+            float sqrDist = ((Vector2)tile.transform.position - (Vector2)player.position).sqrMagnitude;
+            if (sqrDist <= sqrRadius)
+            {
+                safeTiles.RemoveAt(i);
+            }
+        }
+    }
+
+    private Transform ResolvePlayerTransform()
+    {
+        if (playerTransform != null)
+        {
+            return playerTransform;
+        }
+
+        GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+        if (taggedPlayer != null)
+        {
+            playerTransform = taggedPlayer.transform;
+            return playerTransform;
+        }
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (playerLayer >= 0)
+        {
+            GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < allObjects.Length; i++)
+            {
+                if (allObjects[i] != null && allObjects[i].layer == playerLayer)
+                {
+                    playerTransform = allObjects[i].transform;
+                    return playerTransform;
+                }
+            }
+        }
+
+        GameObject namedPlayer = GameObject.Find("player");
+        if (namedPlayer != null)
+        {
+            playerTransform = namedPlayer.transform;
+        }
+
+        return playerTransform;
     }
 
     private void CrackRandomTiles(List<floorRetak> safeTiles, int picks)

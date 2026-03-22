@@ -34,6 +34,12 @@ public class game : MonoBehaviour
     [Tooltip("Tekan R untuk restart run dari lantai 1.")]
     [SerializeField] private bool allowRestartWithR = true;
 
+    [Header("Player Spawn")]
+    [Tooltip("Opsional: titik spawn player tetap (contoh: tepat di bawah lift).")]
+    [SerializeField] private Transform fixedPlayerSpawnPoint;
+    [Tooltip("Jika aktif, player selalu dipindah ke spawn point tetap saat round dimulai.")]
+    [SerializeField] private bool forcePlayerSpawnEachRound = true;
+
     [Header("UI")]
     [Tooltip("Panel game over yang muncul saat kalah.")]
     [SerializeField] private GameObject gameOverScreen;
@@ -250,6 +256,11 @@ public class game : MonoBehaviour
         if (roomGenerator != null)
         {
             roomGenerator.PrepareForRound(persistentFloorNumber);
+        }
+
+        if (forcePlayerSpawnEachRound)
+        {
+            TryPlacePlayerAtFixedSpawn();
         }
 
         if (cachedScenePuzzle != null)
@@ -487,5 +498,57 @@ public class game : MonoBehaviour
 
             current = current.parent;
         }
+    }
+
+    private void TryPlacePlayerAtFixedSpawn()
+    {
+        if (fixedPlayerSpawnPoint == null)
+        {
+            return;
+        }
+
+        Transform player = FindPlayerTransform();
+        if (player == null)
+        {
+            return;
+        }
+
+        Vector3 spawnPos = fixedPlayerSpawnPoint.position;
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.position = spawnPos;
+        }
+        else
+        {
+            player.position = spawnPos;
+        }
+    }
+
+    private Transform FindPlayerTransform()
+    {
+        GameObject byTag = GameObject.FindGameObjectWithTag("Player");
+        if (byTag != null)
+        {
+            return byTag.transform;
+        }
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (playerLayer >= 0)
+        {
+            GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < allObjects.Length; i++)
+            {
+                if (allObjects[i] != null && allObjects[i].layer == playerLayer)
+                {
+                    return allObjects[i].transform;
+                }
+            }
+        }
+
+        GameObject byName = GameObject.Find("player");
+        return byName != null ? byName.transform : null;
     }
 }

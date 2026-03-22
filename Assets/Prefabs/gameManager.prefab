@@ -132,8 +132,6 @@ MonoBehaviour:
   autoFindTilesFromChildren: 1
   tilesRoot: {fileID: 0}
   tiles: []
-  useTileShrinkManager: 0
-  tileShrinkManager: {fileID: 0}
   useRandomSeed: 1
   fixedSeed: 12345
 --- !u!114 &7858379443291732330
