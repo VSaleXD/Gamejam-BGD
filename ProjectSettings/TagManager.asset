@@ -47,11 +47,11 @@ TagManager:
   - name: Obstacle
     uniqueID: 892648595
     locked: 0
-  - name: Item
-    uniqueID: 3274297925
-    locked: 0
   - name: Player
     uniqueID: 1731075637
+    locked: 0
+  - name: Item
+    uniqueID: 3274297925
     locked: 0
   m_RenderingLayers:
   - Default
