@@ -11,6 +11,8 @@ public class playerController : MonoBehaviour
     private Vector2 moveInput;
     private PlayerInput input;
 
+    public Animator animator;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,6 +39,8 @@ public class playerController : MonoBehaviour
 
         moveInput = input.Contoller.Movement.ReadValue<Vector2>();
         moveInput = moveInput.normalized;
+
+        animator.SetFloat("speed", moveInput.sqrMagnitude);
 
         RotateTowardsMovement();
     }
