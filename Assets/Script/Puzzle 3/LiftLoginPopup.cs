@@ -7,12 +7,24 @@ public class LiftLoginPopup : MonoBehaviour
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
     [SerializeField] private TextMeshProUGUI errorText;
+    [SerializeField] private exit exitGate;
 
-    private Lift lift;
-
-    public void SetLift(Lift l)
+    public void SetExit(exit targetExit)
     {
-        lift = l;
+        exitGate = targetExit;
+    }
+
+    private void Awake()
+    {
+        if (exitGate == null)
+        {
+            exitGate = GetComponentInParent<exit>();
+        }
+
+        if (exitGate == null)
+        {
+            exitGate = FindFirstObjectByType<exit>();
+        }
     }
 
     public void Show()
@@ -49,9 +61,13 @@ public class LiftLoginPopup : MonoBehaviour
 
     public void TryLogin()
     {
-        if (lift == null) return;
+        if (exitGate == null)
+        {
+            ShowError("Exit gate belum terhubung.");
+            return;
+        }
 
-        lift.AttemptLogin(usernameInput.text, passwordInput.text);
+        exitGate.AttemptLiftLogin(usernameInput.text, passwordInput.text);
     }
 
     public void ShowError(string msg)
