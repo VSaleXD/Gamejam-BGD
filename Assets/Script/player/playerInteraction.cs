@@ -29,6 +29,8 @@ public class playerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (GameInputLock.InputLocked) return;
+
         FindClosestTarget();
 
         if (controller == null) return;
