@@ -9,11 +9,12 @@ public class playerInteraction : MonoBehaviour
 
     private playerController controller;
     private IInteractable currentTarget;
+    private Puzzle3Manager puzzleManager;
 
     private void Awake()
     {
         controller = GetComponent<playerController>();
-
+        puzzleManager = FindFirstObjectByType<Puzzle3Manager>();
 
         if (interactionPoint == null)
         {
@@ -30,9 +31,20 @@ public class playerInteraction : MonoBehaviour
     {
         FindClosestTarget();
 
-        if (currentTarget != null && controller != null && controller.IsActionPressedThisFrame())
+        if (controller == null) return;
+
+        if (!controller.IsActionPressedThisFrame()) return;
+
+        if (currentTarget != null)
         {
             currentTarget.Interact(gameObject);
+        }
+        else
+        {
+            if (puzzleManager != null && puzzleManager.PlayerHasCard())
+            {
+                puzzleManager.DropCard();
+            }
         }
     }
 
