@@ -14,6 +14,9 @@ public class PowerSocket : MonoBehaviour, IInteractable
 
     [SerializeField] private UnityEvent onSocketPowered;
 
+    [SerializeField] private OfficeComputer computer;
+
+
     [Header("Color Mode")]
     [SerializeField] private bool useRandomColor = true;
 
@@ -80,6 +83,8 @@ public class PowerSocket : MonoBehaviour, IInteractable
         isPowered = true;
 
         Debug.Log(name + " SOCKET AKTIF");
+
+        computer.SetPower(true);
 
         // ⭐⭐⭐ DI SINI SOCKET TRIGGER SESUATU
         onSocketPowered?.Invoke();
