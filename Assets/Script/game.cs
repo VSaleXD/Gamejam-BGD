@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+// Test
 public class game : MonoBehaviour
 {
     public static game Instance { get; private set; }
