@@ -11,7 +11,7 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
     [Header("Optional")]
     [SerializeField] private Transform spawnedPaperRoot;
     [SerializeField] private Puzzle1Manager puzzle1Manager;
-    [SerializeField] private Puzzle1ObjectivePopupUI popupUI;
+    [SerializeField] private MonoBehaviour popupUIBehaviour;
 
     private GameObject spawnedPaper;
 
@@ -22,10 +22,7 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
             puzzle1Manager = FindFirstObjectByType<Puzzle1Manager>();
         }
 
-        if (popupUI == null)
-        {
-            popupUI = FindFirstObjectByType<Puzzle1ObjectivePopupUI>();
-        }
+        TryFindPopupUIBehaviour();
     }
 
     private void Start()
@@ -117,12 +114,28 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
             return;
         }
 
-        Puzzle1ObjectivePaperInteract interact = spawnedPaper.GetComponent<Puzzle1ObjectivePaperInteract>();
+        Component interact = spawnedPaper.GetComponent("Puzzle1ObjectivePaperInteract");
         if (interact == null)
         {
-            interact = spawnedPaper.AddComponent<Puzzle1ObjectivePaperInteract>();
+            Debug.LogWarning("Puzzle1ObjectivePaperSpawner: Puzzle1ObjectivePaperInteract tidak ditemukan di prefab kertas.");
+        }
+    }
+
+    private void TryFindPopupUIBehaviour()
+    {
+        if (popupUIBehaviour != null)
+        {
+            return;
         }
 
-        interact.Configure(puzzle1Manager, popupUI);
+        MonoBehaviour[] behaviours = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            if (behaviours[i] != null && behaviours[i].GetType().Name == "Puzzle1ObjectivePopupUI")
+            {
+                popupUIBehaviour = behaviours[i];
+                return;
+            }
+        }
     }
 }

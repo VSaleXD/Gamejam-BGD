@@ -5,11 +5,11 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
 {
     [Header("Puzzle 1 Setup")]
     [SerializeField] private bool mustFollowOrder = false;
-<<<<<<< Updated upstream
     [SerializeField] private string[] requiredItems = { "mug", "stapler", "book" };
-    [SerializeField] private string[] allItemsInGame = { "mug", "stapler", "book", "pen", "notebook", "scissors", "paperclip" };
+    [SerializeField] private string[] allItemsInGame = { "mug", "stapler", "book", "pen", "notebook", "scissors", "paperClip" };
     [SerializeField, Min(1)] private int requiredItemCountPerRound = 3;
     [SerializeField] private bool randomizeRequiredItemsEachRound = true;
+
     [Header("Item Source")]
     [SerializeField] private bool usePrefabItems = true;
     [SerializeField] private GameObject[] itemObjectsToReset;
@@ -19,13 +19,6 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
     [SerializeField] private Transform[] prefabSpawnPoints;
     [SerializeField] private Transform spawnedItemRoot;
     [SerializeField] private roomBuilder roomGenerator;
-=======
-    [SerializeField] private string[] requiredItems;
-    [SerializeField] private GameObject[] itemObjectsToReset;
-    [SerializeField] private string[] allItemsInGame = { "mug", "stapler", "book", "pen", "notebook", "scissors", "paperClip" };
-    [SerializeField, Min(1)] private int requiredItemCountPerRound = 3;
-    [SerializeField] private bool randomizeRequiredItemsEachRound = true;
->>>>>>> Stashed changes
 
     private game gameManager;
     private readonly HashSet<string> submittedItems = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
@@ -63,11 +56,7 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
 
         RandomizeRequiredItemsIfNeeded();
 
-<<<<<<< Updated upstream
         if (usePrefabItems)
-=======
-        if (itemObjectsToReset == null)
->>>>>>> Stashed changes
         {
             RespawnItemsFromPrefabs();
         }
@@ -75,7 +64,6 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         {
             ResetSceneItems();
         }
-
     }
 
     public bool CanPickItem(string itemId)
@@ -202,60 +190,9 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         return copy;
     }
 
-<<<<<<< Updated upstream
-    public string GetObjectiveTitle()
-    {
-        return "Objective - Puzzle 1";
-    }
-
-    public string GetObjectiveDescription()
-    {
-        return BuildObjectiveText(true, true);
-    }
-
-    public string GetObjectiveTextForPaper()
-    {
-        return BuildObjectiveText(false, false);
-    }
-
-    private string BuildObjectiveText(bool includeProgress, bool includeHint)
-    {
-        string[] items = GetRequiredItemsSnapshot();
-        if (items.Length == 0)
-        {
-            return "- Kumpulkan item objective";
-        }
-
-        string text = "Kumpulkan dan submit item berikut:\n";
-        for (int i = 0; i < items.Length; i++)
-        {
-            string normalized = NormalizeItemId(items[i]);
-            bool submitted = submittedItems.Contains(normalized);
-            string mark = submitted ? "[x] " : "[ ] ";
-            text += "- " + mark + items[i] + "\n";
-        }
-
-        if (includeProgress)
-        {
-            text += "\nProgress: " + submittedItems.Count + "/" + items.Length;
-        }
-
-        if (includeHint)
-        {
-            text += "\nTekan T untuk buka/tutup objective";
-        }
-
-        return text.TrimEnd();
-    }
-
-    private void RandomizeRequiredItemsIfNeeded()
-    {
-        if (!randomizeRequiredItemsEachRound)
-=======
     private void RandomizeRequiredItemsIfNeeded()
     {
         if (!randomizeRequiredItemsEachRound && requiredItems != null && requiredItems.Length > 0)
->>>>>>> Stashed changes
         {
             return;
         }
@@ -266,14 +203,8 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         {
             for (int i = 0; i < allItemsInGame.Length; i++)
             {
-<<<<<<< Updated upstream
-                string item = allItemsInGame[i];
-                string normalized = NormalizeItemId(item);
-=======
                 string original = allItemsInGame[i];
                 string normalized = NormalizeItemId(original);
-
->>>>>>> Stashed changes
                 if (string.IsNullOrEmpty(normalized))
                 {
                     continue;
@@ -291,34 +222,13 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
 
                 if (!exists)
                 {
-<<<<<<< Updated upstream
-                    pool.Add(item.Trim());
-=======
                     pool.Add(original.Trim());
->>>>>>> Stashed changes
                 }
             }
         }
 
         if (pool.Count == 0)
         {
-<<<<<<< Updated upstream
-            Debug.LogWarning("Puzzle1Manager: allItemsInGame kosong. Pakai requiredItems lama.");
-            return;
-        }
-
-        for (int i = pool.Count - 1; i > 0; i--)
-        {
-            int swap = Random.Range(0, i + 1);
-            string temp = pool[i];
-            pool[i] = pool[swap];
-            pool[swap] = temp;
-        }
-
-        int count = Mathf.Clamp(requiredItemCountPerRound, 1, pool.Count);
-        requiredItems = new string[count];
-
-=======
             requiredItems = System.Array.Empty<string>();
             Debug.LogWarning("Puzzle1Manager: allItemsInGame kosong, requiredItems tidak bisa diacak.");
             return;
@@ -335,14 +245,12 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         }
 
         requiredItems = new string[count];
->>>>>>> Stashed changes
         for (int i = 0; i < count; i++)
         {
             requiredItems[i] = pool[i];
         }
 
-<<<<<<< Updated upstream
-        Debug.Log("Puzzle1Manager: Objective round ini -> " + string.Join(", ", requiredItems));
+        Debug.Log("Puzzle1Manager: requiredItems round ini -> " + string.Join(", ", requiredItems));
     }
 
     private void ResetSceneItems()
@@ -406,20 +314,17 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
             {
                 spawnPos = roomPos;
             }
-            else
+            else if (spawnIndices.Count > 0)
             {
-                if (spawnIndices.Count > 0)
-                {
-                    int pick = Random.Range(0, spawnIndices.Count);
-                    int idx = spawnIndices[pick];
-                    spawnIndices.RemoveAt(pick);
+                int pick = Random.Range(0, spawnIndices.Count);
+                int idx = spawnIndices[pick];
+                spawnIndices.RemoveAt(pick);
 
-                    Transform spawn = prefabSpawnPoints[idx];
-                    if (spawn != null)
-                    {
-                        spawnPos = spawn.position;
-                        spawnRot = spawn.rotation;
-                    }
+                Transform spawn = prefabSpawnPoints[idx];
+                if (spawn != null)
+                {
+                    spawnPos = spawn.position;
+                    spawnRot = spawn.rotation;
                 }
             }
 
@@ -450,8 +355,6 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
 
         pickup.ConfigureRuntimeItem(targetItemId, true);
         EnsureItemHasCollider(pickup.gameObject);
-
-        // Keep prefab's original layer setup to avoid breaking player interaction masks.
     }
 
     private void EnsureItemHasCollider(GameObject instance)
@@ -532,8 +435,6 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         }
 
         return roomGenerator.TryGetGeneratedSpawnPosition(reservePosition, out position);
-=======
-        Debug.Log("Puzzle1Manager: requiredItems round ini -> " + string.Join(", ", requiredItems));
     }
 
     public string GetObjectiveTextForPaper()
@@ -576,6 +477,5 @@ public class Puzzle1Manager : MonoBehaviour, IPuzzleRound
         }
 
         return text.TrimEnd();
->>>>>>> Stashed changes
     }
 }

@@ -82,8 +82,6 @@ public class Puzzle3Manager : MonoBehaviour, IPuzzleRound
         }
 
         ConsumeCard();
-        IsCompleted = true;
-        Debug.Log("Puzzle 3 selesai. Komputer berhasil diakses.");
         return true;
     }
 
@@ -96,5 +94,51 @@ public class Puzzle3Manager : MonoBehaviour, IPuzzleRound
         Instantiate(accessCardPrefab, dropPos, Quaternion.identity);
 
         ConsumeCard();
+    }
+
+
+    [Header("Credential")]
+    [SerializeField] private string[] usernameList;
+
+    private string generatedUsername;
+    private string generatedPassword;
+
+    public void GenerateCredential()
+    {
+        if (usernameList == null || usernameList.Length == 0)
+        {
+            generatedUsername = "user";
+        }
+        else
+        {
+            generatedUsername = usernameList[Random.Range(0, usernameList.Length)];
+        }
+
+        generatedPassword = GenerateRandomPassword(6);
+        IsCompleted = true;
+        Debug.Log("Puzzle 3 selesai. Komputer berhasil diakses.");
+    }
+
+    private string GenerateRandomPassword(int length)
+    {
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        string result = "";
+
+        for (int i = 0; i < length; i++)
+        {
+            result += chars[Random.Range(0, chars.Length)];
+        }
+
+        return result;
+    }
+
+    public string GetUsername()
+    {
+        return generatedUsername;
+    }
+
+    public string GetPassword()
+    {
+        return generatedPassword;
     }
 }

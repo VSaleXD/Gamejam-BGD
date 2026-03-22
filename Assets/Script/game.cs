@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -19,11 +20,8 @@ public class game : MonoBehaviour
     [SerializeField] private roomBuilder roomGenerator;
     [Tooltip("Kosongkan jika scene ini tidak pakai pressure/retak lantai.")]
     [SerializeField] private FloorPressureManager floorPressureManager;
-<<<<<<< Updated upstream
-=======
     [Tooltip("Kosongkan jika scene ini tidak pakai objective paper Puzzle 1.")]
     [SerializeField] private MonoBehaviour puzzle1ObjectivePaperSpawnerBehaviour;
->>>>>>> Stashed changes
 
     [Header("Endless - Pindah Scene")]
     [Tooltip("Aktifkan untuk mode endless antar scene puzzle.")]
@@ -80,8 +78,6 @@ public class game : MonoBehaviour
             floorPressureManager = GetComponent<FloorPressureManager>();
         }
 
-<<<<<<< Updated upstream
-=======
         if (puzzle1ObjectivePaperSpawnerBehaviour == null)
         {
             MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
@@ -100,7 +96,6 @@ public class game : MonoBehaviour
             }
         }
 
->>>>>>> Stashed changes
         if (cachedScenePuzzle == null)
         {
             cachedScenePuzzle = FindScenePuzzleController();
@@ -255,17 +250,13 @@ public class game : MonoBehaviour
 
         if (cachedScenePuzzle != null)
         {
-<<<<<<< Updated upstream
             cachedScenePuzzle.ResetPuzzleRound();
             cachedScenePuzzle.BeginPuzzleRound();
-=======
-            runRandomizer.RandomizeRun();
         }
 
         if (puzzle1ObjectivePaperSpawnerBehaviour != null)
         {
             puzzle1ObjectivePaperSpawnerBehaviour.SendMessage("PrepareForRound", persistentFloorNumber, SendMessageOptions.DontRequireReceiver);
->>>>>>> Stashed changes
         }
 
         if (floorPressureManager != null)
@@ -330,6 +321,59 @@ public class game : MonoBehaviour
         }
 
         return null;
+    }
+
+    private bool TryLoadSceneByName(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return false;
+        }
+
+        int total = SceneManager.sceneCountInBuildSettings;
+        for (int i = 0; i < total; i++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = Path.GetFileNameWithoutExtension(path);
+            if (name == sceneName)
+            {
+                SceneManager.LoadScene(sceneName);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryLoadNextEnabledBuildScene()
+    {
+        int total = SceneManager.sceneCountInBuildSettings;
+        if (total <= 0)
+        {
+            return false;
+        }
+
+        int current = SceneManager.GetActiveScene().buildIndex;
+        if (current < 0)
+        {
+            return false;
+        }
+
+        int next = (current + 1) % total;
+        SceneManager.LoadScene(next);
+        return true;
+    }
+
+    private bool TryLoadFirstEnabledBuildScene()
+    {
+        int total = SceneManager.sceneCountInBuildSettings;
+        if (total <= 0)
+        {
+            return false;
+        }
+
+        SceneManager.LoadScene(0);
+        return true;
     }
 
     private void ResetPersistentRun()
