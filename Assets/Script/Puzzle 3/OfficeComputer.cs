@@ -3,6 +3,8 @@ using System.Collections;
 
 public class OfficeComputer : MonoBehaviour, IInteractable
 {
+    [SerializeField] private ComputerPopup popup;
+
     [Header("Visual")]
     [SerializeField] private SpriteRenderer computerRenderer;
     [SerializeField] private Sprite inactiveSprite;
@@ -45,17 +47,15 @@ public class OfficeComputer : MonoBehaviour, IInteractable
     {
         if (!hasPower) return;
 
-        // ⭐ kalau sudah hack selesai → nanti popup
+        if (isHacking) return;
+
+        // ⭐ kalau sudah hack selesai → buka popup
         if (hackFinished)
         {
-            Debug.Log("Show popup later");
+            popup.Show(manager.GetUsername(), manager.GetPassword());
             return;
         }
 
-        // ⭐ kalau sedang hacking → ignore
-        if (isHacking) return;
-
-        // ⭐ butuh kartu
         if (!manager.PlayerHasCard()) return;
 
         manager.ConsumeCard();
@@ -79,6 +79,9 @@ public class OfficeComputer : MonoBehaviour, IInteractable
         loadingRenderer.gameObject.SetActive(false);
 
         isHacking = false;
+
+        manager.GenerateCredential();
+        
         hackFinished = true;
 
         Debug.Log("Hack Finished");
