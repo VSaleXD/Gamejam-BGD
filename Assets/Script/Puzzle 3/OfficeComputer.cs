@@ -1,50 +1,86 @@
 using UnityEngine;
+using System.Collections;
 
 public class OfficeComputer : MonoBehaviour, IInteractable
 {
     [Header("Visual")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer computerRenderer;
     [SerializeField] private Sprite inactiveSprite;
     [SerializeField] private Sprite activeSprite;
 
+    [Header("Hack Loading")]
+    [SerializeField] private SpriteRenderer loadingRenderer;
+    [SerializeField] private Sprite[] loadingSprites;
+    [SerializeField] private float timePerFrame = 0.2f;
+
     private bool hasPower = false;
+    private bool isHacking = false;
+    private bool hackFinished = false;
+
     private Puzzle3Manager manager;
 
     private void Awake()
     {
         manager = FindFirstObjectByType<Puzzle3Manager>();
-        UpdateVisual();
+        UpdateComputerVisual();
+
+        if (loadingRenderer != null)
+            loadingRenderer.gameObject.SetActive(false);
     }
 
     public void SetPower(bool value)
     {
         hasPower = value;
-        UpdateVisual();
+        UpdateComputerVisual();
     }
 
-    private void UpdateVisual()
+    private void UpdateComputerVisual()
     {
-        if (spriteRenderer == null) return;
+        if (computerRenderer == null) return;
 
-        spriteRenderer.sprite = hasPower ? activeSprite : inactiveSprite;
+        computerRenderer.sprite = hasPower ? activeSprite : inactiveSprite;
     }
 
     public void Interact(GameObject interactor)
     {
-        // ❌ kalau belum nyala → tidak bisa apa-apa
         if (!hasPower) return;
 
-        // ❌ kalau player tidak punya kartu
+        // ⭐ kalau sudah hack selesai → nanti popup
+        if (hackFinished)
+        {
+            Debug.Log("Show popup later");
+            return;
+        }
+
+        // ⭐ kalau sedang hacking → ignore
+        if (isHacking) return;
+
+        // ⭐ butuh kartu
         if (!manager.PlayerHasCard()) return;
 
-        // pakai kartu
         manager.ConsumeCard();
 
-        StartComputerUse();
+        StartCoroutine(HackRoutine());
     }
 
-    private void StartComputerUse()
+    private IEnumerator HackRoutine()
     {
-        Debug.Log("Computer accessed → start hacking later");
+        Debug.Log("HACK START");
+        isHacking = true;
+
+        loadingRenderer.gameObject.SetActive(true);
+
+        for (int i = 0; i < loadingSprites.Length; i++)
+        {
+            loadingRenderer.sprite = loadingSprites[i];
+            yield return new WaitForSeconds(timePerFrame);
+        }
+
+        loadingRenderer.gameObject.SetActive(false);
+
+        isHacking = false;
+        hackFinished = true;
+
+        Debug.Log("Hack Finished");
     }
 }
