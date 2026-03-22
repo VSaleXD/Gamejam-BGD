@@ -85,4 +85,31 @@ public class Puzzle2Manager : MonoBehaviour, IPuzzleRound
 
         return true;
     }
+
+    public string GetObjectiveTitle()
+    {
+        return "Objective - Puzzle 2";
+    }
+
+    public string GetObjectiveDescription()
+    {
+        int total = sockets != null ? sockets.Length : 0;
+        int powered = 0;
+
+        if (sockets != null)
+        {
+            for (int i = 0; i < sockets.Length; i++)
+            {
+                if (sockets[i] != null && sockets[i].isPowered)
+                {
+                    powered++;
+                }
+            }
+        }
+
+        string text = "Sambungkan listrik sampai semua socket aktif.\n";
+        text += "Progress Socket: " + powered + "/" + total + "\n";
+        text += "Tekan T untuk buka/tutup objective";
+        return text;
+    }
 }

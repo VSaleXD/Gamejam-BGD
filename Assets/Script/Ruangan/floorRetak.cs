@@ -68,9 +68,19 @@ public class floorRetak : MonoBehaviour
         HandleTouch(other.gameObject);
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        HandleTouch(other.gameObject);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        HandleTouch(collision.gameObject);
+    }
+
     private void HandleTouch(GameObject other)
     {
-        if (!other.CompareTag("Player"))
+        if (!IsPlayerObject(other))
         {
             return;
         }
@@ -85,6 +95,22 @@ public class floorRetak : MonoBehaviour
         {
             TriggerLose();
         }
+    }
+
+    private bool IsPlayerObject(GameObject other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        if (other.CompareTag("Player"))
+        {
+            return true;
+        }
+
+        // Fallback: tetap anggap player jika object punya checker player di parent/child.
+        return other.GetComponentInParent<PlayerLavaCheck>() != null || other.GetComponentInChildren<PlayerLavaCheck>() != null;
     }
 
     public bool TriggerCrack()
@@ -135,7 +161,8 @@ public class floorRetak : MonoBehaviour
 
         if (tileCollider != null)
         {
-            tileCollider.enabled = currentState != TileState.Broken;
+            tileCollider.enabled = true;
+            tileCollider.isTrigger = true;
         }
 
         if (currentState == TileState.Cracked)

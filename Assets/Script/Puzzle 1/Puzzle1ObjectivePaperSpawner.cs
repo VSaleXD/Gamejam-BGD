@@ -11,6 +11,7 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
     [Header("Optional")]
     [SerializeField] private Transform spawnedPaperRoot;
     [SerializeField] private Puzzle1Manager puzzle1Manager;
+    [SerializeField] private MonoBehaviour popupUIBehaviour;
 
     private GameObject spawnedPaper;
 
@@ -20,6 +21,8 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
         {
             puzzle1Manager = FindFirstObjectByType<Puzzle1Manager>();
         }
+
+        TryFindPopupUIBehaviour();
     }
 
     private void Start()
@@ -60,6 +63,7 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
         Transform parent = spawnedPaperRoot != null ? spawnedPaperRoot : transform;
         spawnedPaper = Instantiate(objectivePaperPrefab, selectedSpawn.position, selectedSpawn.rotation, parent);
 
+        SetupInteractionOnSpawnedPaper();
         RefreshObjectiveText();
     }
 
@@ -71,7 +75,9 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
             return;
         }
 
-        string objectiveText = BuildObjectiveText();
+        string objectiveText = puzzle1Manager != null
+            ? puzzle1Manager.GetObjectiveTextForPaper()
+            : "OBJECTIVE\n- Puzzle 1";
 
         Text uiText = spawnedPaper.GetComponentInChildren<Text>(true);
         if (uiText != null)
@@ -90,29 +96,6 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
         Debug.LogWarning("Puzzle1ObjectivePaperSpawner: Tidak ada komponen Text atau TextMesh pada prefab kertas.");
     }
 
-    private string BuildObjectiveText()
-    {
-        if (puzzle1Manager == null)
-        {
-            return "OBJECTIVE\n- Puzzle 1";
-        }
-
-        string[] requiredItems = puzzle1Manager.GetRequiredItemsSnapshot();
-        if (requiredItems == null || requiredItems.Length == 0)
-        {
-            return "OBJECTIVE\n- Tidak ada item";
-        }
-
-        string text = "OBJECTIVE SUBMIT:\n";
-
-        for (int i = 0; i < requiredItems.Length; i++)
-        {
-            text += "- " + requiredItems[i] + "\n";
-        }
-
-        return text.TrimEnd();
-    }
-
     private Transform PickSpawnPoint()
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
@@ -122,5 +105,37 @@ public class Puzzle1ObjectivePaperSpawner : MonoBehaviour
 
         int index = Random.Range(0, spawnPoints.Length);
         return spawnPoints[index];
+    }
+
+    private void SetupInteractionOnSpawnedPaper()
+    {
+        if (spawnedPaper == null)
+        {
+            return;
+        }
+
+        Component interact = spawnedPaper.GetComponent("Puzzle1ObjectivePaperInteract");
+        if (interact == null)
+        {
+            Debug.LogWarning("Puzzle1ObjectivePaperSpawner: Puzzle1ObjectivePaperInteract tidak ditemukan di prefab kertas.");
+        }
+    }
+
+    private void TryFindPopupUIBehaviour()
+    {
+        if (popupUIBehaviour != null)
+        {
+            return;
+        }
+
+        MonoBehaviour[] behaviours = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            if (behaviours[i] != null && behaviours[i].GetType().Name == "Puzzle1ObjectivePopupUI")
+            {
+                popupUIBehaviour = behaviours[i];
+                return;
+            }
+        }
     }
 }

@@ -1,19 +1,56 @@
 using UnityEngine;
 
-public class Puzzle3Manager : MonoBehaviour
+public class Puzzle3Manager : MonoBehaviour, IPuzzleRound
 {
     [Header("Card Visual")]
     [SerializeField] private GameObject accessCardPrefab;
     [SerializeField] private GameObject accessCardVisualPrefab;
+    [SerializeField] private AccessCard sceneAccessCard;
 
     private GameObject currentVisual;
     private bool playerHasCard = false;
+    public bool IsCompleted { get; private set; }
+
+    public void BeginPuzzleRound()
+    {
+        // State already prepared by ResetPuzzleRound in game manager flow.
+    }
+
+    public void ResetPuzzleRound()
+    {
+        IsCompleted = false;
+        playerHasCard = false;
+
+        if (currentVisual != null)
+        {
+            Destroy(currentVisual);
+            currentVisual = null;
+        }
+
+        if (sceneAccessCard == null)
+        {
+            sceneAccessCard = FindFirstObjectByType<AccessCard>(FindObjectsInactive.Include);
+        }
+
+        if (sceneAccessCard != null)
+        {
+            sceneAccessCard.ResetCardState();
+        }
+    }
 
     public void OnCardTaken(GameObject player)
     {
+        if (IsCompleted)
+        {
+            return;
+        }
+
         playerHasCard = true;
 
-        SpawnVisual(player.transform);
+        if (player != null)
+        {
+            SpawnVisual(player.transform);
+        }
     }
 
     private void SpawnVisual(Transform player)
@@ -36,6 +73,18 @@ public class Puzzle3Manager : MonoBehaviour
             Destroy(currentVisual);
         }
     }
+
+    public bool TryUseCardForComputer()
+    {
+        if (IsCompleted || !playerHasCard)
+        {
+            return false;
+        }
+
+        ConsumeCard();
+        return true;
+    }
+
     public void DropCard()
     {
         if (!playerHasCard) return;
@@ -56,8 +105,18 @@ public class Puzzle3Manager : MonoBehaviour
 
     public void GenerateCredential()
     {
-        generatedUsername = usernameList[Random.Range(0, usernameList.Length)];
+        if (usernameList == null || usernameList.Length == 0)
+        {
+            generatedUsername = "user";
+        }
+        else
+        {
+            generatedUsername = usernameList[Random.Range(0, usernameList.Length)];
+        }
+
         generatedPassword = GenerateRandomPassword(6);
+        IsCompleted = true;
+        Debug.Log("Puzzle 3 selesai. Komputer berhasil diakses.");
     }
 
     private string GenerateRandomPassword(int length)

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1237810275994361901}
   - component: {fileID: 1701166019784635883}
   - component: {fileID: 2649648899139830943}
-  - component: {fileID: 7918904204238400528}
   - component: {fileID: 7547216230204137560}
   - component: {fileID: 7858379443291732330}
+  - component: {fileID: 7553711256140957000}
+  - component: {fileID: 129809869812633474}
   m_Layer: 0
   m_Name: gameManager
   m_TagString: Untagged
@@ -49,13 +50,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::game
   scenePuzzleController: {fileID: 2649648899139830943}
-  runRandomizer: {fileID: 7918904204238400528}
+  roomGenerator: {fileID: 7553711256140957000}
   floorPressureManager: {fileID: 7547216230204137560}
+  puzzle1ObjectivePaperSpawnerBehaviour: {fileID: 129809869812633474}
   endlessMode: 1
   endlessSceneNames:
   - puzzle1
   - puzzle2
+  - puzzle3
   allowRestartWithR: 1
+  gameOverScreen: {fileID: 0}
 --- !u!114 &2649648899139830943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,39 +75,37 @@ MonoBehaviour:
   mustFollowOrder: 0
   requiredItems:
   - mug
-  - stapler
-  - book
-  itemObjectsToReset:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!114 &7918904204238400528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7216599160276289850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b5d19532fd1f7c4fae48eb3aa02b3e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RunRandomizer
-  randomizeOnStart: 1
-  uniqueSpawnPoints: 1
-  itemTargets:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  itemSpawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  randomizeSubmit: 0
-  submitTarget: {fileID: 0}
-  submitSpawnPoints: []
+  allItemsInGame:
+  - coffee
+  - redBook
+  - pen
+  - blueBook
+  - scissors
+  - paperclip
+  - keyboard
+  - stickyNote
+  - purpleBook
+  - keyboard
+  requiredItemCountPerRound: 3
+  randomizeRequiredItemsEachRound: 1
+  usePrefabItems: 1
+  itemObjectsToReset: []
+  itemPrefabs:
+  - {fileID: 1063109864056970353, guid: e232126e7d9c915428a543f39f046ce0, type: 3}
+  - {fileID: 8692386970454261863, guid: 66c0170631bf05a448d8fb4de3bceb5e, type: 3}
+  - {fileID: 1499218971407164468, guid: a7d1cdf3bf8edec4881576f84f39467b, type: 3}
+  - {fileID: 416639294830460961, guid: d595b2d8ba83ea04b9a4b0a81944eff2, type: 3}
+  - {fileID: 4067219562034935501, guid: ae42822964ce61743914f5b1d5442a77, type: 3}
+  - {fileID: 8749822442459068698, guid: c764b2dabcf6c8a4b92fab5300e08902, type: 3}
+  - {fileID: 8940486957357100515, guid: 22e798ea040e1454ab06b6695a622811, type: 3}
+  - {fileID: 6884522757783969646, guid: b0264bddba49e334f917efb91cbbf683, type: 3}
+  - {fileID: 8367263789171143880, guid: 0cecc7d7c7b7b49419657d2bb1ff76ca, type: 3}
+  - {fileID: 2264680033671188089, guid: bca07fe0d39ae9646ba0df013952de55, type: 3}
+  preferRoomBuilderRange: 1
+  uniqueRoomBuilderPositions: 1
+  prefabSpawnPoints: []
+  spawnedItemRoot: {fileID: 0}
+  roomGenerator: {fileID: 7553711256140957000}
 --- !u!114 &7547216230204137560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,7 +121,7 @@ MonoBehaviour:
   runOnStart: 1
   initialDelay: 2
   waveInterval: 2
-  cracksPerWave: 1
+  cracksPerWave: 4
   waveIntervalMultiplierPerRound: 0.92
   minWaveInterval: 0.4
   crackDelayMultiplierPerRound: 0.93
@@ -130,6 +132,8 @@ MonoBehaviour:
   autoFindTilesFromChildren: 1
   tilesRoot: {fileID: 0}
   tiles: []
+  useTileShrinkManager: 0
+  tileShrinkManager: {fileID: 0}
   useRandomSeed: 1
   fixedSeed: 12345
 --- !u!114 &7858379443291732330
@@ -139,10 +143,77 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7216599160276289850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc6dd1d743b5c324f85392f7bfd21b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle2Manager
   sockets: []
-  cables: []
+  onPuzzleCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7553711256140957000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd88daedf69d884aac70fe0bed62b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::roomBuilder
+  buildOnStart: 1
+  rebuildOnPrepareRound: 1
+  minColumns: 8
+  maxColumns: 12
+  minRows: 8
+  maxRows: 12
+  tileSize: 1
+  fitRoomToCamera: 1
+  targetCamera: {fileID: 0}
+  centerOnCamera: 1
+  viewportPaddingWorld: 0.25
+  addOneTileOverscan: 1
+  outerRingStartsBroken: 1
+  floorPrefab: {fileID: 6770428100325551376, guid: 6c7bf3f17a71226409cdad523e41643a, type: 3}
+  obstaclePrefabs:
+  - {fileID: 4714537095031245963, guid: eb8b823c2ed230e45b0806fd9e905e25, type: 3}
+  - {fileID: 1785582070756376191, guid: 150b9d6c670c89d4480d2a184fa02009, type: 3}
+  - {fileID: 5704759708003939059, guid: 52febf6e33e70384a8df3d6cc816ee6e, type: 3}
+  - {fileID: 260382534946745887, guid: 848a826771f126746bba969fe61830d1, type: 3}
+  - {fileID: 8192667143769105227, guid: 9f548213e5a67fd46a9a69f1697e83c3, type: 3}
+  - {fileID: 5096864026027039087, guid: 5f6b29d16a441a7498554f047c644c39, type: 3}
+  useNamedRoots: 1
+  floorRootName: tilesRoot
+  obstacleRootName: obstaclesRoot
+  floorRoot: {fileID: 0}
+  obstacleRoot: {fileID: 0}
+  floorPressureManager: {fileID: 0}
+  minObstacleCount: 3
+  maxObstacleCount: 10
+  edgePadding: 1
+  playerSpawnTarget: {fileID: 0}
+  exitSpawnTarget: {fileID: 0}
+  dynamicTargetsToPlace: []
+  useRoundAsSeed: 1
+  fixedSeed: 12345
+--- !u!114 &129809869812633474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bd4048f6b34ea4b84b79029b5c6c48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle1ObjectivePaperSpawner
+  objectivePaperPrefab: {fileID: 0}
+  spawnPoints: []
+  spawnOnStart: 1
+  spawnedPaperRoot: {fileID: 0}
+  puzzle1Manager: {fileID: 0}
+  popupUIBehaviour: {fileID: 0}

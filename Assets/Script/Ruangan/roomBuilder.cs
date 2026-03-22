@@ -357,6 +357,16 @@ public class roomBuilder : MonoBehaviour
 		return floorRoot;
 	}
 
+	public Transform GetPlayerSpawnTarget()
+	{
+		return playerSpawnTarget;
+	}
+
+	public Transform GetExitSpawnTarget()
+	{
+		return exitSpawnTarget;
+	}
+
 	public bool TryGetGeneratedSpawnPosition(bool reservePosition, out Vector3 position)
 	{
 		position = default;
