@@ -29,18 +29,29 @@ public class playerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameInputLock.InputLocked)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         moveInput = input.Contoller.Movement.ReadValue<Vector2>();
         moveInput = moveInput.normalized;
+
         RotateTowardsMovement();
     }
 
     public bool IsActionPressedThisFrame()
     {
+        if (GameInputLock.InputLocked) return false;
+
         return input != null && input.Contoller.Action.WasPressedThisFrame();
     }
 
     private void FixedUpdate()
     {
+        if (GameInputLock.InputLocked) return;
+
         if (rb == null)
         {
             return;

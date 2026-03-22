@@ -113,6 +113,12 @@ public class game : MonoBehaviour
 
     private void Update()
     {
+        // ⭐ LOCK INPUT SAAT POPUP / UI
+        if (GameInputLock.InputLocked)
+        {
+            return;
+        }
+
         if (!allowRestartWithR || Keyboard.current == null)
         {
             return;
