@@ -8,20 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<< Updated upstream:Assets/Prefabs/Obstacles/obstacle.prefab
   - component: {fileID: 4072702215014100340}
   - component: {fileID: 5544992966117704674}
   - component: {fileID: 5386428362161111855}
   m_Layer: 8
   m_Name: obstacle
-=======
-  - component: {fileID: 4346789141940113393}
-  - component: {fileID: 7764024088709539430}
-  - component: {fileID: 4670138088385610806}
-  - component: {fileID: 4736682180056936728}
-  m_Layer: 0
-  m_Name: messy paper 3_0
->>>>>>> Stashed changes:Assets/Prefabs/messy paper 3_0.prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,27 +100,6 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5347161269674084306}
   m_Enabled: 1
-<<<<<<< Updated upstream:Assets/Prefabs/Obstacles/obstacle.prefab
-=======
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bd4048f6b34ea4b84b79029b5c6c48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Puzzle1ObjectivePaperSpawner
-  objectivePaperPrefab: {fileID: 0}
-  spawnPoints: []
-  spawnOnStart: 1
-  spawnedPaperRoot: {fileID: 0}
-  puzzle1Manager: {fileID: 0}
-  popupUI: {fileID: 0}
---- !u!61 &4736682180056936728
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620271458409307393}
-  m_Enabled: 1
->>>>>>> Stashed changes:Assets/Prefabs/messy paper 3_0.prefab
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -159,7 +129,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-<<<<<<< Updated upstream:Assets/Prefabs/Obstacles/obstacle.prefab
     pivot: {x: 0, y: 0}
     oldSize: {x: 0, y: 0}
     newSize: {x: 0, y: 0}
@@ -168,14 +137,4 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 0.0001, y: 0.0001}
-=======
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8.09, y: 6.800666}
-    newSize: {x: 8.09, y: 6.800666}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 8.09, y: 6.800666}
->>>>>>> Stashed changes:Assets/Prefabs/messy paper 3_0.prefab
   m_EdgeRadius: 0
