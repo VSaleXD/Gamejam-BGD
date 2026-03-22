@@ -41,6 +41,11 @@ public class roomBuilder : MonoBehaviour
     [SerializeField] private int maxObstacleCount = 10;
     [SerializeField] private int edgePadding = 1;
 
+    [Header("Obstacle Safety")]
+    [SerializeField] private bool avoidObstacleNearTargets = true;
+    [SerializeField, Min(0f)] private float obstacleAvoidRadius = 2f;
+    [SerializeField] private Transform[] obstacleAvoidTargets;
+
     [Header("Auto Place Target")]
     [SerializeField] private Transform playerSpawnTarget;
     [SerializeField] private Transform exitSpawnTarget;
@@ -263,7 +268,7 @@ public class roomBuilder : MonoBehaviour
 
         for (int i = 0; i < obstacleCount; i++)
         {
-            if (!TryTakeFreePosition(out Vector3 obstaclePos))
+            if (!TryTakeObstaclePosition(out Vector3 obstaclePos))
             {
                 break;
             }
@@ -274,6 +279,73 @@ public class roomBuilder : MonoBehaviour
                 Instantiate(prefab, obstaclePos, Quaternion.identity, obstacleRoot);
             }
         }
+    }
+
+    private bool TryTakeObstaclePosition(out Vector3 position)
+    {
+        position = default;
+
+        if (freePositions.Count == 0)
+        {
+            return false;
+        }
+
+        if (!avoidObstacleNearTargets)
+        {
+            return TryTakeFreePosition(out position);
+        }
+
+        List<int> candidateIndices = new List<int>();
+        for (int i = 0; i < freePositions.Count; i++)
+        {
+            if (!IsNearAvoidTarget(freePositions[i]))
+            {
+                candidateIndices.Add(i);
+            }
+        }
+
+        if (candidateIndices.Count == 0)
+        {
+            return false;
+        }
+
+        int chosenIndex = candidateIndices[Random.Range(0, candidateIndices.Count)];
+        position = freePositions[chosenIndex];
+        freePositions.RemoveAt(chosenIndex);
+        return true;
+    }
+
+    private bool IsNearAvoidTarget(Vector3 worldPos)
+    {
+        float sqrRadius = obstacleAvoidRadius * obstacleAvoidRadius;
+        if (sqrRadius <= 0f)
+        {
+            return false;
+        }
+
+        if (playerSpawnTarget != null && Vector3.SqrMagnitude(playerSpawnTarget.position - worldPos) <= sqrRadius)
+        {
+            return true;
+        }
+
+        if (exitSpawnTarget != null && Vector3.SqrMagnitude(exitSpawnTarget.position - worldPos) <= sqrRadius)
+        {
+            return true;
+        }
+
+        if (obstacleAvoidTargets != null)
+        {
+            for (int i = 0; i < obstacleAvoidTargets.Length; i++)
+            {
+                Transform target = obstacleAvoidTargets[i];
+                if (target != null && Vector3.SqrMagnitude(target.position - worldPos) <= sqrRadius)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private bool TryTakeFreePosition(out Vector3 position)
