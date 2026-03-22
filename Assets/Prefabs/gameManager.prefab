@@ -58,7 +58,9 @@ MonoBehaviour:
   - puzzle1
   - puzzle2
   - puzzle3
-  allowRestartWithR: 1
+  allowRestartWithR: 0
+  fixedPlayerSpawnPoint: {fileID: 0}
+  forcePlayerSpawnEachRound: 1
   gameOverScreen: {fileID: 0}
 --- !u!114 &2649648899139830943
 MonoBehaviour:
@@ -129,6 +131,9 @@ MonoBehaviour:
   pressureMode: 1
   edgeBandWidth: 0.08
   centerPoint: {fileID: 0}
+  protectPlayerArea: 1
+  protectedPlayerRadius: 1.25
+  playerTransform: {fileID: 0}
   autoFindTilesFromChildren: 1
   tilesRoot: {fileID: 0}
   tiles: []
