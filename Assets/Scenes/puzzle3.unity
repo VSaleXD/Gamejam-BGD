@@ -626,7 +626,7 @@ MonoBehaviour:
   - {fileID: 1710923152598385415, guid: 0fb94d90bfb26c846a7289951a030728, type: 3}
   - {fileID: 4961517233270383521, guid: 4f7588d708b06a74ca030c0e79b197d8, type: 3}
   - {fileID: -317173773589481416, guid: b8dd507a83195b54b8c4cc4152b72558, type: 3}
-  timePerFrame: 0.5
+  timePerFrame: 0.2
 --- !u!212 &207979063
 SpriteRenderer:
   serializedVersion: 2
@@ -1298,15 +1298,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::game
   scenePuzzleController: {fileID: 527442548}
   roomGenerator: {fileID: 0}
-  runRandomizer: {fileID: 527442545}
   floorPressureManager: {fileID: 527442547}
-  puzzle1ObjectivePaperSpawner: {fileID: 0}
+  puzzle1ObjectivePaperSpawnerBehaviour: {fileID: 0}
   endlessMode: 1
   endlessSceneNames:
   - puzzle1
   - puzzle2
   - puzzle3
   allowRestartWithR: 1
+  gameOverScreen: {fileID: 0}
 --- !u!4 &527442544
 Transform:
   m_ObjectHideFlags: 0
@@ -1334,28 +1334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5d19532fd1f7c4fae48eb3aa02b3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RunRandomizer
-  randomizeOnStart: 1
-  uniqueSpawnPoints: 1
-  avoidObstacleOverlap: 1
-  obstacleLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  spawnCheckRadius: 0.35
-  itemTargets:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  itemSpawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allowGeneratedRoomFallback: 1
-  roomGenerator: {fileID: 0}
-  randomizeSubmit: 0
-  submitTarget: {fileID: 0}
-  submitSpawnPoints: []
 --- !u!114 &527442546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1373,7 +1351,24 @@ MonoBehaviour:
   - mug
   - stapler
   - book
+  allItemsInGame:
+  - mug
+  - stapler
+  - book
+  - pen
+  - notebook
+  - scissors
+  - paperClip
+  requiredItemCountPerRound: 3
+  randomizeRequiredItemsEachRound: 1
+  usePrefabItems: 1
   itemObjectsToReset: []
+  itemPrefabs: []
+  preferRoomBuilderRange: 1
+  uniqueRoomBuilderPositions: 1
+  prefabSpawnPoints: []
+  spawnedItemRoot: {fileID: 0}
+  roomGenerator: {fileID: 0}
 --- !u!114 &527442547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1438,10 +1433,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Puzzle3Manager
   accessCardPrefab: {fileID: 6210437660809167225, guid: 4cbb39c58485beb4da392feed49566ab, type: 3}
   accessCardVisualPrefab: {fileID: 2997300546921778106, guid: 8fb8b26e2de513c488dfe08325e07f6a, type: 3}
+  sceneAccessCard: {fileID: 648745328}
   usernameList:
   - AditCahyo
   - Aleandre
   - Darith
+--- !u!114 &648745328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2126157240570695289, guid: 4cbb39c58485beb4da392feed49566ab, type: 3}
+  m_PrefabInstance: {fileID: 5190336365890093004}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16fe9abb3a23b9746b20ec69d2767f3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AccessCard
 --- !u!1 &764483323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1658,11 +1665,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTileCheck
   tilemap: {fileID: 1415411474}
   brokenTile: {fileID: 11400000, guid: a7e86a322cb6b744e9e8a73e5ad285f5, type: 2}
-  useFallTag: 1
-  fallTag: FALL
   fallLayers:
     serializedVersion: 2
     m_Bits: 0
+  checkBrokenFloorRetak: 1
+  brokenTileCheckRadius: 0.2
 --- !u!114 &764483335
 MonoBehaviour:
   m_ObjectHideFlags: 0
