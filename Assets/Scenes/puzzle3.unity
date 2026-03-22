@@ -766,7 +766,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1235,9 +1235,21 @@ PrefabInstance:
       value: elevator
       objectReference: {fileID: 0}
     - target: {fileID: 2666246807484946043, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
+      propertyPath: passwordInput
+      value: 
+      objectReference: {fileID: 120002304}
+    - target: {fileID: 2666246807484946043, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
+      propertyPath: usernameInput
+      value: 
+      objectReference: {fileID: 1491967865}
+    - target: {fileID: 2666246807484946043, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
       propertyPath: requiresLiftLogin
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2666246807484946043, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
+      propertyPath: liftLoginPopupBehaviour
+      value: 
+      objectReference: {fileID: 2130211959}
     - target: {fileID: 3373146255740025571, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1908,7 +1920,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2130211961}
         m_TargetAssemblyTypeName: LiftLoginPopup, Assembly-CSharp
         m_MethodName: TryLogin
         m_Mode: 1
@@ -2218,19 +2230,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LiftLoginPopup, Assembly-CSharp
-        m_MethodName: TryLogin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2130211961}
         m_TargetAssemblyTypeName: LiftLoginPopup, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1
@@ -2417,6 +2417,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1541688042}
   m_CullTransparentMesh: 1
+--- !u!114 &1553320321 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2666246807484946043, guid: 5363618acfc307441a716bb5bd197a15, type: 3}
+  m_PrefabInstance: {fileID: 1007103166}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b379059710f654549ae84d8929242db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::exit
 --- !u!212 &1563498421 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 7282618507994822790, guid: aa0f93e74a21739428e52f2704c33e5f, type: 3}
@@ -3153,7 +3164,7 @@ MonoBehaviour:
   usernameInput: {fileID: 1491967865}
   passwordInput: {fileID: 120002304}
   errorText: {fileID: 490715839}
-  exitGate: {fileID: 0}
+  exitGate: {fileID: 1553320321}
 --- !u!1001 &1790012054051637316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3324,6 +3335,10 @@ PrefabInstance:
       propertyPath: popup
       value: 
       objectReference: {fileID: 1791822382}
+    - target: {fileID: 8440293747834012045, guid: d2265a901da76b7468ea822db27d4057, type: 3}
+      propertyPath: activeSprite
+      value: 
+      objectReference: {fileID: -5000143567200462900, guid: 5be6e0e708658774c9125c82bf609ee8, type: 3}
     - target: {fileID: 8440293747834012045, guid: d2265a901da76b7468ea822db27d4057, type: 3}
       propertyPath: loadingRenderer
       value: 
