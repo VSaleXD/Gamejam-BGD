@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7547216230204137560}
   - component: {fileID: 7858379443291732330}
   - component: {fileID: 7553711256140957000}
+  - component: {fileID: 129809869812633474}
   m_Layer: 0
   m_Name: gameManager
   m_TagString: Untagged
@@ -51,6 +52,7 @@ MonoBehaviour:
   scenePuzzleController: {fileID: 2649648899139830943}
   roomGenerator: {fileID: 7553711256140957000}
   floorPressureManager: {fileID: 7547216230204137560}
+  puzzle1ObjectivePaperSpawnerBehaviour: {fileID: 129809869812633474}
   endlessMode: 1
   endlessSceneNames:
   - puzzle1
@@ -197,3 +199,21 @@ MonoBehaviour:
   dynamicTargetsToPlace: []
   useRoundAsSeed: 1
   fixedSeed: 12345
+--- !u!114 &129809869812633474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7216599160276289850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bd4048f6b34ea4b84b79029b5c6c48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Puzzle1ObjectivePaperSpawner
+  objectivePaperPrefab: {fileID: 0}
+  spawnPoints: []
+  spawnOnStart: 1
+  spawnedPaperRoot: {fileID: 0}
+  puzzle1Manager: {fileID: 0}
+  popupUIBehaviour: {fileID: 0}

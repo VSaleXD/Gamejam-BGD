@@ -1,4 +1,5 @@
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -105,6 +106,8 @@ public class game : MonoBehaviour
         {
             Debug.LogWarning("Scene puzzle controller belum valid. Isi field Scene Puzzle Controller dengan script yang implement IPuzzleRound.");
         }
+
+        ResolveGameOverScreenIfMissing();
     }
 
     private void OnValidate()
@@ -117,6 +120,7 @@ public class game : MonoBehaviour
 
     private void Start()
     {
+        ResolveGameOverScreenIfMissing();
         Time.timeScale = 1f;
         SetGameOverScreenVisible(false);
         InitializePersistentRunIfNeeded();
@@ -385,6 +389,8 @@ public class game : MonoBehaviour
 
     private void SetGameOverScreenVisible(bool isVisible)
     {
+        ResolveGameOverScreenIfMissing();
+
         if (gameOverScreen == null)
         {
             Debug.LogWarning("game: Game Over Screen belum di-assign.");
@@ -404,6 +410,69 @@ public class game : MonoBehaviour
         }
 
         gameOverScreen.SetActive(isVisible);
+    }
+
+    private void ResolveGameOverScreenIfMissing()
+    {
+        if (gameOverScreen != null)
+        {
+            return;
+        }
+
+        gameOverScreen = FindSceneObjectByNames(new[] { "Game Over", "gameOver", "GameOver" });
+    }
+
+    private GameObject FindSceneObjectByNames(string[] targetNames)
+    {
+        if (targetNames == null || targetNames.Length == 0)
+        {
+            return null;
+        }
+
+        Scene activeScene = SceneManager.GetActiveScene();
+        if (!activeScene.IsValid())
+        {
+            return null;
+        }
+
+        GameObject[] roots = activeScene.GetRootGameObjects();
+        if (roots == null || roots.Length == 0)
+        {
+            return null;
+        }
+
+        Queue<Transform> queue = new Queue<Transform>();
+        for (int i = 0; i < roots.Length; i++)
+        {
+            if (roots[i] != null)
+            {
+                queue.Enqueue(roots[i].transform);
+            }
+        }
+
+        while (queue.Count > 0)
+        {
+            Transform current = queue.Dequeue();
+            if (current == null)
+            {
+                continue;
+            }
+
+            for (int i = 0; i < targetNames.Length; i++)
+            {
+                if (current.name == targetNames[i])
+                {
+                    return current.gameObject;
+                }
+            }
+
+            for (int i = 0; i < current.childCount; i++)
+            {
+                queue.Enqueue(current.GetChild(i));
+            }
+        }
+
+        return null;
     }
 
     private void EnsureParentsActive(Transform child)
