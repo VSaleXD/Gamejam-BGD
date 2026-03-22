@@ -5,13 +5,15 @@ public class floorRetak : MonoBehaviour
     private enum TileState
     {
         Safe,
-        Cracked,
+        Cracked1,
+        Cracked2,
         Broken
     }
 
     [Header("Visual")]
     [SerializeField] private GameObject safeVisual;
-    [SerializeField] private GameObject crackedVisual;
+    [SerializeField] private GameObject cracked1Visual;
+    [SerializeField] private GameObject cracked2Visual;
     [SerializeField] private GameObject brokenVisual;
 
     [Header("Timing")]
@@ -30,9 +32,10 @@ public class floorRetak : MonoBehaviour
     private float baseCrackToBrokenDelay;
     private float crackDelayScale = 1f;
     private float touchCrackAllowedAt;
+    private float crackStepDuration;
 
     public bool IsSafe => currentState == TileState.Safe;
-    public bool IsCracked => currentState == TileState.Cracked;
+    public bool IsCracked => currentState == TileState.Cracked1 || currentState == TileState.Cracked2;
     public bool IsBroken => currentState == TileState.Broken;
 
     private void Start()
@@ -40,18 +43,26 @@ public class floorRetak : MonoBehaviour
         tileCollider = GetComponent<Collider2D>();
         gameManager = game.Instance != null ? game.Instance : FindFirstObjectByType<game>();
         baseCrackToBrokenDelay = crackToBrokenDelay;
+        crackStepDuration = Mathf.Max(0.05f, crackToBrokenDelay * 0.5f);
         touchCrackAllowedAt = Time.time + Mathf.Max(0f, touchCrackGraceDuration);
         SetState(TileState.Safe);
     }
 
     private void Update()
     {
-        if (currentState == TileState.Cracked)
+        if (currentState == TileState.Cracked1 || currentState == TileState.Cracked2)
         {
             stateTimer -= Time.deltaTime;
             if (stateTimer <= 0f)
             {
-                SetState(TileState.Broken);
+                if (currentState == TileState.Cracked1)
+                {
+                    SetState(TileState.Cracked2);
+                }
+                else
+                {
+                    SetState(TileState.Broken);
+                }
             }
         }
         else if (currentState == TileState.Broken && autoReset)
@@ -136,7 +147,7 @@ public class floorRetak : MonoBehaviour
             return false;
         }
 
-        SetState(TileState.Cracked);
+        SetState(TileState.Cracked1);
         return true;
     }
 
@@ -155,6 +166,7 @@ public class floorRetak : MonoBehaviour
     {
         crackDelayScale = Mathf.Max(0.1f, scale);
         crackToBrokenDelay = baseCrackToBrokenDelay * crackDelayScale;
+        crackStepDuration = Mathf.Max(0.05f, crackToBrokenDelay * 0.5f);
     }
 
     private void SetState(TileState nextState)
@@ -166,9 +178,14 @@ public class floorRetak : MonoBehaviour
             safeVisual.SetActive(currentState == TileState.Safe);
         }
 
-        if (crackedVisual != null)
+        if (cracked1Visual != null)
         {
-            crackedVisual.SetActive(currentState == TileState.Cracked);
+            cracked1Visual.SetActive(currentState == TileState.Cracked1);
+        }
+
+        if (cracked2Visual != null)
+        {
+            cracked2Visual.SetActive(currentState == TileState.Cracked2);
         }
 
         if (brokenVisual != null)
@@ -182,9 +199,9 @@ public class floorRetak : MonoBehaviour
             tileCollider.isTrigger = true;
         }
 
-        if (currentState == TileState.Cracked)
+        if (currentState == TileState.Cracked1 || currentState == TileState.Cracked2)
         {
-            stateTimer = crackToBrokenDelay;
+            stateTimer = crackStepDuration;
         }
         else if (currentState == TileState.Broken)
         {

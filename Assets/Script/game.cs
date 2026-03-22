@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-// Test
 public class game : MonoBehaviour
 {
     public static game Instance { get; private set; }
@@ -30,6 +29,12 @@ public class game : MonoBehaviour
     [SerializeField] private bool endlessMode = true;
     [Tooltip("Urutan scene endless. Nama harus sama persis dengan scene di Build Settings.")]
     [SerializeField] private string[] endlessSceneNames;
+    [Tooltip("Jika aktif, scene berikutnya dipilih random dari daftar endlessSceneNames.")]
+    [SerializeField] private bool randomizeNextScene = true;
+    [Tooltip("Jika aktif, random hanya terjadi saat menyelesaikan scene terakhir di daftar (contoh: Puzzle 3).")]
+    [SerializeField] private bool randomizeOnlyAfterLastScene = true;
+    [Tooltip("Jika aktif, saat random akan menghindari scene yang sama dua kali beruntun.")]
+    [SerializeField] private bool avoidImmediateRepeatWhenRandom = true;
 
     [Header("Restart")]
     [Tooltip("Tekan R untuk restart run dari lantai 1.")]
@@ -49,6 +54,7 @@ public class game : MonoBehaviour
 
     public int RoundNumber => persistentFloorNumber;
     public int CurrentFloorNumber => persistentFloorNumber;
+    public static int LastKnownFloorNumber => persistentFloorNumber;
     public int CurrentPuzzleIndex => persistentSceneCycleIndex;
     public string CurrentPuzzleName => GetCurrentPuzzleName();
 
@@ -171,12 +177,13 @@ public class game : MonoBehaviour
 
         if (endlessSceneNames != null && endlessSceneNames.Length > 0)
         {
-            persistentSceneCycleIndex = GetNextSceneIndex();
+            bool shouldRandomize = ShouldRandomizeNextScene();
+            persistentSceneCycleIndex = shouldRandomize ? GetRandomSceneIndex() : GetNextSceneIndex();
             string nextSceneName = endlessSceneNames[persistentSceneCycleIndex];
 
             if (TryLoadSceneByName(nextSceneName))
             {
-                Debug.Log("Lantai selesai. Pindah ke scene berikutnya: " + nextSceneName);
+                Debug.Log("Lantai selesai. Pindah ke scene berikutnya: " + nextSceneName + (shouldRandomize ? " (random)" : " (urutan)"));
                 return;
             }
 
@@ -317,6 +324,53 @@ public class game : MonoBehaviour
         }
 
         return (persistentSceneCycleIndex + 1) % endlessSceneNames.Length;
+    }
+
+    private bool ShouldRandomizeNextScene()
+    {
+        if (!randomizeNextScene)
+        {
+            return false;
+        }
+
+        if (endlessSceneNames == null || endlessSceneNames.Length <= 1)
+        {
+            return false;
+        }
+
+        if (!randomizeOnlyAfterLastScene)
+        {
+            return true;
+        }
+
+        return persistentSceneCycleIndex >= endlessSceneNames.Length - 1;
+    }
+
+    private int GetRandomSceneIndex()
+    {
+        if (endlessSceneNames == null || endlessSceneNames.Length == 0)
+        {
+            return 0;
+        }
+
+        if (endlessSceneNames.Length == 1)
+        {
+            return 0;
+        }
+
+        int nextIndex = Random.Range(0, endlessSceneNames.Length);
+
+        if (avoidImmediateRepeatWhenRandom)
+        {
+            int guard = 0;
+            while (nextIndex == persistentSceneCycleIndex && guard < 8)
+            {
+                nextIndex = Random.Range(0, endlessSceneNames.Length);
+                guard++;
+            }
+        }
+
+        return nextIndex;
     }
 
     private string GetCurrentPuzzleName()
