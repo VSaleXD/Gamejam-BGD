@@ -7,13 +7,16 @@ public class PlayerLavaCheck : MonoBehaviour
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private TileBase brokenTile;
 
-    [Header("Fall Zone Check")]
-    [SerializeField] private bool useFallTag = true;
-    [SerializeField] private string fallTag = "FALL";
+    [Header("Fall Zone Check (Layer)")]
     [SerializeField] private LayerMask fallLayers;
+
+    [Header("Prefab Broken Tile Check")]
+    [SerializeField] private bool checkBrokenFloorRetak = true;
+    [SerializeField] private float brokenTileCheckRadius = 0.2f;
 
     private game gameManager;
     private bool alreadyDead;
+    private bool warnedNoFallLayer;
 
     private void Awake()
     {
@@ -27,20 +30,49 @@ public class PlayerLavaCheck : MonoBehaviour
             return;
         }
 
-        if (tilemap == null || brokenTile == null)
+        if (tilemap != null && brokenTile != null)
         {
-            return;
+            Vector3 worldPos = transform.position;
+
+            Vector3Int cellPos = tilemap.WorldToCell(worldPos);
+
+            TileBase currentTile = tilemap.GetTile(cellPos);
+
+            if (currentTile == brokenTile)
+            {
+                TriggerGameOver("Player jatuh ke broken tile.");
+                return;
+            }
         }
 
-        Vector3 worldPos = transform.position;
-
-        Vector3Int cellPos = tilemap.WorldToCell(worldPos);
-
-        TileBase currentTile = tilemap.GetTile(cellPos);
-
-        if (currentTile == brokenTile)
+        if (checkBrokenFloorRetak)
         {
-            TriggerGameOver("Player jatuh ke broken tile.");
+            CheckBrokenPrefabTileUnderPlayer();
+        }
+    }
+
+    private void CheckBrokenPrefabTileUnderPlayer()
+    {
+        Collider2D[] nearbyHits = Physics2D.OverlapCircleAll(transform.position, brokenTileCheckRadius);
+        for (int i = 0; i < nearbyHits.Length; i++)
+        {
+            Collider2D hit = nearbyHits[i];
+            if (hit == null)
+            {
+                continue;
+            }
+
+            floorRetak tile = hit.GetComponent<floorRetak>();
+            if (tile == null)
+            {
+                tile = hit.GetComponentInParent<floorRetak>();
+            }
+
+            if (tile != null && tile.IsBroken)
+            {
+                TriggerGameOver("Player berdiri di tile broken (floorRetak).");
+                return;
+            }
         }
     }
 
@@ -61,19 +93,37 @@ public class PlayerLavaCheck : MonoBehaviour
             return;
         }
 
-        if (useFallTag && other.CompareTag(fallTag))
+        floorRetak tile = other.GetComponent<floorRetak>();
+        if (tile == null)
         {
-            TriggerGameOver("Player menyentuh area FALL.");
+            tile = other.GetComponentInParent<floorRetak>();
+        }
+
+        if (tile != null)
+        {
+            if (tile.IsBroken)
+            {
+                TriggerGameOver("Player menyentuh tile broken.");
+            }
+
             return;
         }
 
-        if (fallLayers.value != 0)
+        if (fallLayers.value == 0)
         {
-            int otherLayerMask = 1 << other.layer;
-            if ((fallLayers.value & otherLayerMask) != 0)
+            if (!warnedNoFallLayer)
             {
-                TriggerGameOver("Player menyentuh layer FALL.");
+                warnedNoFallLayer = true;
+                Debug.LogWarning("PlayerLavaCheck: fallLayers belum di-set. Set layer area jatuh di inspector.");
             }
+
+            return;
+        }
+
+        int otherLayerMask = 1 << other.layer;
+        if ((fallLayers.value & otherLayerMask) != 0)
+        {
+            TriggerGameOver("Player menyentuh layer FALL.");
         }
     }
 
@@ -87,5 +137,16 @@ public class PlayerLavaCheck : MonoBehaviour
         }
 
         Debug.Log(reason);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!checkBrokenFloorRetak)
+        {
+            return;
+        }
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, brokenTileCheckRadius);
     }
 }

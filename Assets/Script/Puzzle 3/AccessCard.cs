@@ -20,4 +20,10 @@ public class AccessCard : MonoBehaviour, IInteractable
 
         gameObject.SetActive(false);
     }
+
+    public void ResetCardState()
+    {
+        taken = false;
+        gameObject.SetActive(true);
+    }
 }

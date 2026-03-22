@@ -1256,7 +1256,7 @@ MonoBehaviour:
   roomGenerator: {fileID: 0}
   runRandomizer: {fileID: 527442545}
   floorPressureManager: {fileID: 527442547}
-  puzzle1ObjectivePaperSpawner: {fileID: 0}
+  puzzle1ObjectivePaperSpawnerBehaviour: {fileID: 0}
   endlessMode: 1
   endlessSceneNames: []
   allowRestartWithR: 1
@@ -1268,13 +1268,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527442542}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.002501517, w: 0.9999969}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.287}
 --- !u!114 &527442545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1316,7 +1316,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527442542}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77741803df5122841ae5b77d590a642e, type: 3}
   m_Name: 
@@ -1327,6 +1327,16 @@ MonoBehaviour:
   - stapler
   - book
   itemObjectsToReset: []
+  allItemsInGame:
+  - mug
+  - stapler
+  - book
+  - pen
+  - notebook
+  - scissors
+  - paperClip
+  requiredItemCountPerRound: 3
+  randomizeRequiredItemsEachRound: 1
 --- !u!114 &527442547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2130,7 +2140,7 @@ Transform:
   m_GameObject: {fileID: 764483323}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.48, y: 0.35, z: 0}
+  m_LocalPosition: {x: -0.12, y: -4.26, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

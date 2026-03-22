@@ -50,23 +50,41 @@ public class playerInteraction : MonoBehaviour
 
     private void FindClosestTarget()
     {
-        Collider2D[] hits;
+        currentTarget = FindClosestTargetInLayerMask(interactableLayers);
 
-        if (interactableLayers.value == 0)
+        // Fallback: if layer mask misses a prefab setup, still allow interactables to be found.
+        if (currentTarget == null && interactableLayers.value != 0)
         {
-            hits = Physics2D.OverlapCircleAll(interactionPoint.position, interactionRadius);
+            currentTarget = FindClosestTargetInLayerMask(default);
         }
-        else
-        {
-            hits = Physics2D.OverlapCircleAll(interactionPoint.position, interactionRadius, interactableLayers);
-        }
+    }
 
-        currentTarget = null;
+    private IInteractable FindClosestTargetInLayerMask(LayerMask mask)
+    {
+        Collider2D[] hits = mask.value == 0
+            ? Physics2D.OverlapCircleAll(interactionPoint.position, interactionRadius)
+            : Physics2D.OverlapCircleAll(interactionPoint.position, interactionRadius, mask);
+
+        IInteractable bestTarget = null;
         float bestDistance = float.MaxValue;
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < hits.Length; i++)
         {
+            Collider2D hit = hits[i];
+            if (hit == null)
+            {
+                continue;
+            }
+
             IInteractable interactable = hit.GetComponent<IInteractable>();
+            if (interactable == null)
+            {
+                interactable = hit.GetComponentInParent<IInteractable>();
+            }
+            if (interactable == null)
+            {
+                interactable = hit.GetComponentInChildren<IInteractable>(true);
+            }
             if (interactable == null)
             {
                 continue;
@@ -76,9 +94,11 @@ public class playerInteraction : MonoBehaviour
             if (distance < bestDistance)
             {
                 bestDistance = distance;
-                currentTarget = interactable;
+                bestTarget = interactable;
             }
         }
+
+        return bestTarget;
     }
 
     private void OnDrawGizmosSelected()

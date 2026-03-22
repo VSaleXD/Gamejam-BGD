@@ -37,8 +37,7 @@ public class OfficeComputer : MonoBehaviour, IInteractable
         // ❌ kalau player tidak punya kartu
         if (!manager.PlayerHasCard()) return;
 
-        // pakai kartu
-        manager.ConsumeCard();
+        if (!manager.TryUseCardForComputer()) return;
 
         StartComputerUse();
     }
