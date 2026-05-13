@@ -19,6 +19,11 @@ public class MainMenu : MonoBehaviour
         tutorialPanel.SetActive(true);
     }
 
+    public void testing()
+    {
+        Debug.Log("Testing button works");
+    }
+
     public void OpenCredits()
     {
         mainPanel.SetActive(false);
